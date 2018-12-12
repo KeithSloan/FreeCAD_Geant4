@@ -1,0 +1,9 @@
+#!/bin/bash
+# Need to make excutable chmod +x softLinks
+src=$(pwd)
+tgt1="/usr/lib/freecad"
+tgt2="/usr/lib/freecad-daily"
+sudo rm -rf $tgt1/Mod/Geant4
+sudo ln -s $src/Mod $tgt1/Mod/Geant4
+sudo rm -rf $tgt2/Mod/Geant4
+sudo ln -s $src/Mod $tgt2/Mod/Geant4`
