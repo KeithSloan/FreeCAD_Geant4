@@ -2,7 +2,7 @@
 
 #***************************************************************************
 #*                                                                         *
-#*   Copyright (c) 2017 Keith Sloan <keith@sloan-home.co.uk>               *
+#*   Copyright (c) 2017-2018 Keith Sloan <keith@sloan-home.co.uk>          *
 #*                                                                         *
 #*   This program is free software; you can redistribute it and/or modify  *
 #*   it under the terms of the GNU Lesser General Public License (LGPL)    *
@@ -32,6 +32,9 @@ printverbose = False
 
 import FreeCAD, os, sys, re, math
 import Part, PartGui
+from Geant4 import *
+from ctypes import *
+import Geant4.G4gdml
 
 if FreeCAD.GuiUp:
     import FreeCADGui
@@ -233,20 +236,48 @@ def parseVolume(root,name,lx,ly,lz) :
     for pv in vol.findall('physvol') : 
         parsePhysVol(root,pv,lx,ly,lz)
 
+
+def browsePhysicalVolume(LV):
+    num = LV.GetNoDaughters()
+    FreeCAD.Console.PrintMessage("Logical Volume  : "+str(LV.GetName())+'\n')
+    FreeCAD.Console.PrintMessage("Num Daughters : "+str(num)+'\n')
+    for i in range(1,num,1) :
+       pv  = LV.GetDaughter(i)
+       lvd = pv.GetLogicalVolume()
+       if ( lvd.GetNoDaughters() == 0) :
+          FreeCAD.Console.PrintMessage("Logical Volume  : "+str(lvd.GetName())+'\n')
+
+          FreeCAD.Console.PrintMessage("Parse Logical Volume \n")
+
+
 def processGDML(filename):
     FreeCAD.Console.PrintMessage('Geant4 - Import GDML file : '+filename+'\n')
     if printverbose: print ('Geant4 - ImportGDML Version 0.1')
+    
+    gdml_parser = G4GDMLParser()
+    gdml_parser.Read(G4String(str(filename))) 
 
-    import xml.etree.ElementTree as ET
-    tree = ET.parse(filename)
-    root = tree.getroot()
+#    Reader = gdml_parser.GetReader()
+
+#    WV = gdml_parser.GetWorldVolume(G4String(str("Default")))
+    WV = gdml_parser.GetWorldVolume()
+    LV = WV.GetLogicalVolume()
+    
+    num = browsePhysicalVolume(LV)
+    FreeCAD.Console.PrintMessage("Final Number : " + str(num)+'\n')
+
+#    LV = Reader.GetVolume(Reader.GetSetup("Default"))
+
+#    import xml.etree.ElementTree as ET
+#    tree = ET.parse(filename)
+#    root = tree.getroot()
  
-    for setup in root.find('setup'):
-        print setup.attrib
-        ref = getRef(setup)
-        parseVolume(root,ref,0,0,0)
+#    for setup in root.find('setup'):
+#        print setup.attrib
+#        ref = getRef(setup)
+#        parseVolume(root,ref,0,0,0)
 
-    doc.recompute()
-    if printverbose:
-        print('End ImportGDML')
+#    doc.recompute()
+#    if printverbose:
+    print('End ImportGDML')
     FreeCAD.Console.PrintMessage('End processing GDML file\n')
