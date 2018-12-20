@@ -248,6 +248,13 @@ def browsePhysicalVolume(LV):
           FreeCAD.Console.PrintMessage("Logical Volume  : "+str(lvd.GetName())+'\n')
 
           FreeCAD.Console.PrintMessage("Parse Logical Volume \n")
+          solid = lvd.GetSolid()
+          print dir(solid)
+          solid.DumpInfo()
+#          G4type = solid.GetEntityType()
+          print("Type : "+str(solid.GetName())+"\n")
+#          FreeCAD.Console.PrintMessage("Solid : "+str(G4String(G4type))+" : "+entity+"\n")
+
 
 
 def processGDML(filename):
