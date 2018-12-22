@@ -29,6 +29,12 @@ def createTrap(Z,Y1,X1,X2,X3,X4,TA1,TA2) :
 def createTubs() :
     print("Create Tubs ")
 
+def subtractSolid() :
+    print("Subtract Solid ")
+
+def unionSolid() :
+    print("Union Solid ")
+
 def parseLogicalVolume(lv) :
     print("Parse Logical Volume "+str(lv.GetName()))
 #   print dir(lv)
@@ -51,15 +57,24 @@ def parseLogicalVolume(lv) :
 
        if case(Geant4.G4geometry.G4Trap):
  	      Z  = solid.GetZHalfLength()*2
-              Y1 = solid.GetHalfLength1()*2 
-	      X1 = solid.getHalfLength1()*2
-	      X2 = solid.getHalfLength2()*2
-	      X3 = solid.getHalfLength3()*2
-	      X4 = solid.getHalfLength4()*2
-	      TA1 = solid.getTanAlpha1()
-	      TA2 = solid.getTanAlpha2()
-              creatTrap(Z,Y1,X1,X2,X3,X4,TA1,TA2)
+              #Y1 = solid.GetHalfLength1()*2 
+	      #X1 = solid.getHalfLength1()*2
+	      #X2 = solid.getHalfLength2()*2
+	      #X3 = solid.getHalfLength3()*2
+	      #X4 = solid.getHalfLength4()*2
+	      #TA1 = solid.getTanAlpha1()
+	      #TA2 = solid.getTanAlpha2()
+              #createTrap(Z,Y1,X1,X2,X3,X4,TA1,TA2)
+              createTrap(1,2,3,4,5,6,7,8)
 	      break
+
+       if case(Geant4.G4geometry.G4SubtractionSolid) :
+	      subtractSolid()
+              break
+
+       if case(Geant4.G4geometry.G4UnionSolid) :
+              unionSolid()
+              break
 
        print "Solid type : "+str(type(solid))+" Not yet supported\n"
        break
@@ -91,10 +106,10 @@ def main() :
 
     num = browsePhysicalVolume(wv)
 
-#filename = "/home/keith/GDML-Test-Files/lhcbvelo.gdml"
+filename = "/home/keith/GDML-Test-Files/lhcbvelo.gdml"
 #filename = "/home/keith/GDML-Test-Files/test4.gdml"
 #filename = "/home/keith/GDML-Test-Files/test5.gdml"
-filename = "/home/keith/GDML-Test-Files/test6.gdml"
+#filename = "/home/keith/GDML-Test-Files/test6.gdml"
 
 main()
 
