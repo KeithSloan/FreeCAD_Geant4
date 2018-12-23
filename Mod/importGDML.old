@@ -28,17 +28,13 @@ __title__="FreeCAD - Geant4 GDML importer"
 __author__ = "Keith Sloan <keith@sloan-home.co.uk>"
 __url__ = ["https://github.com/KeithSloan/FreeCAD_Geant4"]
 
-printverbose = True
-
-print "Starting"
+printverbose = False
 
 import FreeCAD, os, sys, re, math
 import Part, PartGui
-#from Geant4 import *
-#from ctypes import *
+from Geant4 import *
+from ctypes import *
 import Geant4.G4gdml
-
-print "Imported"
 
 if FreeCAD.GuiUp:
     import FreeCADGui
@@ -97,6 +93,25 @@ class switch(object):
 
 def case(*args):
     return any((arg == switch.value for arg in args))
+
+def getVal(ptr,var) :
+    return float(eval(ptr.get(var)))
+
+def processPlacement(base,rot) :
+    print "Rotation : "
+    print rot.attrib
+    if 'y' in rot.attrib :
+	axis = FreeCAD.Vector(0,1,0) 
+        angle = float(rot.attrib['y'])
+    if 'x' in rot.attrib :
+	axis = FreeCAD.Vector(1,0,0) 
+        angle = float(rot.attrib['x'])
+    if 'z' in rot.attrib :
+	axis = FreeCAD.Vector(0,0,1) 
+        angle = float(rot.attrib['z'])
+    print angle 
+    place = FreeCAD.Placement(base,axis,angle)
+    return place
 
 def createBox(solid,volref,lx,ly,lz,rot) :
     print "CreateBox : "
@@ -159,61 +174,87 @@ def createSolid(solid,volref,lx,ly,lz,rot) :
         print "Solid : "+solid.tag+" Not yet supported"
         break
 
-def parseLogicalVolume(lv) :
-    print("Parse Logical Volume "+str(lv.GetName()))
-#   print dir(lv)
-    solid = lv.GetSolid()
-    while switch(type(solid)) :
-       if case(Geant4.G4geometry.G4Box):
-              X = solid.GetXHalfLength()*2
-              Y = solid.GetYHalfLength()*2
-              Z = solid.GetZHalfLength()*2
-              createBox(solid,X,Y,Z)
-              break
 
-       if case(Geant4.G4geometry.G4Cons):
-              createCons()
-              break
+def getRef(ptr) :
+    ref = ptr.get('ref')
+    print "ref : " + ref
+    return ref
 
-       if case(Geant4.G4geometry.G4Tubs):
-              createTubs()
-              break
+def parseObject(root,ptr) :
+    print ptr.tag
+    print ptr.attrib
+    if ptr.tag in ["subtraction","union","intersection"] :
+       print "Boolean : "+ptr.tag
+       base = ptr.find('first')
+       name = getRef(base)
+       base = root.find("solids/*[@name='%s']" % name )
+       parseObject(root,base)
+       tool = ptr.find('second')
+       name = getRef(tool)
+       tool = root.find("solids/*[@name='%s']" % name )
+       parseObject(root,tool)
 
-       if case(Geant4.G4geometry.G4Trap):
-              Z  = solid.GetZHalfLength()*2
-              #Y1 = solid.GetHalfLength1()*2
-              #X1 = solid.getHalfLength1()*2
-              #X2 = solid.getHalfLength2()*2
-              #X3 = solid.getHalfLength3()*2
-              #X4 = solid.getHalfLength4()*2
-              #TA1 = solid.getTanAlpha1()
-              #TA2 = solid.getTanAlpha2()
-              #createTrap(Z,Y1,X1,X2,X3,X4,TA1,TA2)
-              createTrap(1,2,3,4,5,6,7,8)
-              break
+def getVolSolid(root,name):
+    print "Get Volume Solid"
+    vol = root.find("structure/volume[@name='%s']" % name )
+    sr = vol.find("solidref")
+    print sr.attrib
+    name = getRef(sr)
+    solid = root.find("solids/*[@name='%s']" % name )
+    return solid
 
-       if case(Geant4.G4geometry.G4SubtractionSolid) :
-              subtractSolid()
-              break
-
-       if case(Geant4.G4geometry.G4UnionSolid) :
-              unionSolid()
-              break
-
-       print "Solid type : "+str(type(solid))+" Not yet supported\n"
-       break
-
-def browsePhysicalVolume(pv):
-    print("\nPhysical Volume  : "+str(pv.GetName()))
-    lv = pv.GetLogicalVolume()
-    num = lv.GetNoDaughters()
-    if num == 0 :
-       parseLogicalVolume(lv)
+def parsePhysVol(root,ptr,lx,ly,lz):
+    print "ParsePhyVol"
+    pos = ptr.find("positionref")
+    if pos is not None :
+       name = getRef(pos)
+       pos = root.find("define/position[@name='%s']" % name )
+       print pos.attrib
     else :
-       print("Num Daughters : "+str(num))
-       for i in range(0,num,1) :
-           pvd = lv.GetDaughter(i)
-           browsePhysicalVolume(pvd)
+       pos = ptr.find("position")
+    lx += float(eval(pos.get('x')))
+    ly += float(eval(pos.get('y')))
+    lz += float(eval(pos.get('z')))
+    rot = ptr.find("rotationref")
+    if rot is not None :
+       name = getRef(rot)
+       rot = root.find("define/rotation[@name='%s']" % name )
+    else :
+       rot = ptr.find("rotation")
+    volref = ptr.find("volumeref")
+    name = getRef(volref)
+    solid = getVolSolid(root,name)
+    if ((pos is not None) and (rot is not None)) :
+       createSolid(solid,volref,lx,ly,lz,rot)
+    parseVolume(root,name,lx,ly,lz)
+
+# ParseVolume 
+def parseVolume(root,name,lx,ly,lz) :
+    print "ParseVolume : "+name
+    vol = root.find("structure/volume[@name='%s']" % name )
+    print vol.attrib
+    for pv in vol.findall('physvol') : 
+        parsePhysVol(root,pv,lx,ly,lz)
+
+
+def browsePhysicalVolume(LV):
+    num = LV.GetNoDaughters()
+    FreeCAD.Console.PrintMessage("Logical Volume  : "+str(LV.GetName())+'\n')
+    FreeCAD.Console.PrintMessage("Num Daughters : "+str(num)+'\n')
+    for i in range(1,num,1) :
+       pv  = LV.GetDaughter(i)
+       lvd = pv.GetLogicalVolume()
+       if ( lvd.GetNoDaughters() == 0) :
+          FreeCAD.Console.PrintMessage("Logical Volume  : "+str(lvd.GetName())+'\n')
+
+          FreeCAD.Console.PrintMessage("Parse Logical Volume \n")
+          solid = lvd.GetSolid()
+          print dir(solid)
+          solid.DumpInfo()
+#          G4type = solid.GetEntityType()
+          print("Type : "+str(solid.GetName())+"\n")
+#          FreeCAD.Console.PrintMessage("Solid : "+str(G4String(G4type))+" : "+entity+"\n")
+
 
 
 def processGDML(filename):
@@ -225,11 +266,11 @@ def processGDML(filename):
 
 #    Reader = gdml_parser.GetReader()
 
-#    wv = gdml_parser.GetWorldVolume(G4String(str("Default")))
-    wv = gdml_parser.GetWorldVolume()
-#   lv = WV.GetLogicalVolume()
+#    WV = gdml_parser.GetWorldVolume(G4String(str("Default")))
+    WV = gdml_parser.GetWorldVolume()
+    LV = WV.GetLogicalVolume()
     
-    num = browsePhysicalVolume(wv)
+    num = browsePhysicalVolume(LV)
     FreeCAD.Console.PrintMessage("Final Number : " + str(num)+'\n')
 
 #    LV = Reader.GetVolume(Reader.GetSetup("Default"))
