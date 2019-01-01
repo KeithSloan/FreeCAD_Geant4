@@ -15,7 +15,7 @@ class switch(object):
 def case(*args):
     return any((arg == switch.value for arg in args))
 
-def createBox(solid,x,y,z) :
+def createBox(x,y,z) :
     print("Create Box : x "+str(x)+" y "+str(y)+" z "+str(z))
 
 def createCons() :
@@ -44,7 +44,7 @@ def parseLogicalVolume(lv) :
 	      X = solid.GetXHalfLength()*2
               Y = solid.GetYHalfLength()*2
 	      Z = solid.GetZHalfLength()*2
- 	      createBox(solid,X,Y,Z)
+ 	      createBox(X,Y,Z)
 	      break
       
        if case(Geant4.G4geometry.G4Cons):

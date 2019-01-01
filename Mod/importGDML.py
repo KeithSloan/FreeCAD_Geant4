@@ -34,7 +34,7 @@ print "Starting"
 
 import FreeCAD, os, sys, re, math
 import Part, PartGui
-#from Geant4 import *
+from Geant4 import *
 #from ctypes import *
 import Geant4.G4gdml
 
@@ -98,19 +98,21 @@ class switch(object):
 def case(*args):
     return any((arg == switch.value for arg in args))
 
-def createBox(solid,volref,lx,ly,lz,rot) :
+#def createBox(solid,volref,lx,ly,lz,rot) :
+def createBox(lx,ly,lz) :
     print "CreateBox : "
-    print solid.attrib
-    mycube=doc.addObject('Part::Box',volref.get('ref')+'_'+solid.get('name')+'_')
-    x = getVal(solid,'x')
-    y = getVal(solid,'y')
-    z = getVal(solid,'z')
-    mycube.Length = x
-    mycube.Width = y
-    mycube.Height = z
+#    print solid.attrib
+#    mycube=doc.addObject('Part::Box',volref.get('ref')+'_'+solid.get('name')+'_')
+    mycube=doc.addObject('Part::Box','nameBox')
+#    x = getVal(solid,'x')
+#    y = getVal(solid,'y')
+#    z = getVal(solid,'z')
+    mycube.Length = lx
+    mycube.Width  = ly
+    mycube.Height = lz
     print "Logical Position : "+str(lx)+','+str(ly)+','+str(lz)
-    base = FreeCAD.Vector(lx-x/2,ly-y/2,lz-z/2)
-    mycube.Placement = processPlacement(base,rot)
+#    base = FreeCAD.Vector(lx-x/2,ly-y/2,lz-z/2)
+#    mycube.Placement = processPlacement(base,rot)
     print mycube.Placement.Rotation
     mycube.ViewObject.DisplayMode = 'Wireframe'
 
@@ -168,7 +170,7 @@ def parseLogicalVolume(lv) :
               X = solid.GetXHalfLength()*2
               Y = solid.GetYHalfLength()*2
               Z = solid.GetZHalfLength()*2
-              createBox(solid,X,Y,Z)
+              createBox(X,Y,Z)
               break
 
        if case(Geant4.G4geometry.G4Cons):

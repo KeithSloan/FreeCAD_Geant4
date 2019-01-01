@@ -1,0 +1,8 @@
+/home/keith/FreeCAD_Geant4/exportSolid/CMakeFiles/install/strip.dir
+/home/keith/FreeCAD_Geant4/exportSolid/CMakeFiles/install/local.dir
+/home/keith/FreeCAD_Geant4/exportSolid/CMakeFiles/basicProject.dir
+/home/keith/FreeCAD_Geant4/exportSolid/CMakeFiles/edit_cache.dir
+/home/keith/FreeCAD_Geant4/exportSolid/CMakeFiles/rebuild_cache.dir
+/home/keith/FreeCAD_Geant4/exportSolid/CMakeFiles/list_install_components.dir
+/home/keith/FreeCAD_Geant4/exportSolid/CMakeFiles/DumpGDML.dir
+/home/keith/FreeCAD_Geant4/exportSolid/CMakeFiles/install.dir
