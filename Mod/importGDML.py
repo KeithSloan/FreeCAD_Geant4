@@ -110,11 +110,12 @@ def createBox(lx,ly,lz) :
     mycube.Length = lx
     mycube.Width  = ly
     mycube.Height = lz
-    print "Logical Position : "+str(lx)+','+str(ly)+','+str(lz)
+    print "length : "+str(lx)+' width : '+str(ly)+' height : '+str(lz)
 #    base = FreeCAD.Vector(lx-x/2,ly-y/2,lz-z/2)
 #    mycube.Placement = processPlacement(base,rot)
-    print mycube.Placement.Rotation
+#    print mycube.Placement.Rotation
     mycube.ViewObject.DisplayMode = 'Wireframe'
+    return(mycube)
 
 def makeCylinder(solid,r) :
     mycyl = doc.addObject('Part::Cylinder',solid.get('name')+'_')
@@ -161,7 +162,7 @@ def createSolid(solid,volref,lx,ly,lz,rot) :
         print "Solid : "+solid.tag+" Not yet supported"
         break
 
-def parseLogicalVolume(lv) :
+def parseLogicalVolume(lv,pv) :
     print("Parse Logical Volume "+str(lv.GetName()))
 #   print dir(lv)
     solid = lv.GetSolid()
@@ -170,7 +171,7 @@ def parseLogicalVolume(lv) :
               X = solid.GetXHalfLength()*2
               Y = solid.GetYHalfLength()*2
               Z = solid.GetZHalfLength()*2
-              createBox(X,Y,Z)
+              obj = createBox(X,Y,Z)
               break
 
        if case(Geant4.G4geometry.G4Cons):
@@ -205,12 +206,23 @@ def parseLogicalVolume(lv) :
        print "Solid type : "+str(type(solid))+" Not yet supported\n"
        break
 
+    print "Deal with Translation and Rotation"
+    v3v = pv.GetObjectTranslation()
+    print "X : "+str(v3v.getX())
+    print "Y : "+str(v3v.getY())
+    print "Z : "+str(v3v.getZ())
+    print v3v
+    p = obj.Placement
+    print p
+    print p.toMatrix()
+    pm = FreeCAD.Matrix()
+
 def browsePhysicalVolume(pv):
     print("\nPhysical Volume  : "+str(pv.GetName()))
     lv = pv.GetLogicalVolume()
     num = lv.GetNoDaughters()
     if num == 0 :
-       parseLogicalVolume(lv)
+       parseLogicalVolume(lv,pv)
     else :
        print("Num Daughters : "+str(num))
        for i in range(0,num,1) :
