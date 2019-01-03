@@ -207,11 +207,20 @@ def parseLogicalVolume(lv,pv) :
        break
 
     print "Deal with Translation and Rotation"
-    v3v = pv.GetObjectTranslation()
-    print "X : "+str(v3v.getX())
-    print "Y : "+str(v3v.getY())
-    print "Z : "+str(v3v.getZ())
-    print v3v
+    t3v = pv.GetObjectTranslation()
+    print "X : "+str(t3v.getX())
+    print "Y : "+str(t3v.getY())
+    print "Z : "+str(t3v.getZ())
+    print t3v
+
+    rotMat = pv.GetObjectRotationValue()
+    print rotMat
+
+#    g4aff = G4AffineTransform()
+    g4aff = G4AffineTransform(pv.GetObjectTranslation(),
+                            pv.GetObjectTranslation())
+    print g4aff
+
     p = obj.Placement
     print p
     print p.toMatrix()
