@@ -146,11 +146,15 @@ def report_object(obj) :
          print("Wire extrusion")
          break
 
-def process_BREP_Shape(shape) :
+def process_BREP_Object(obj) :
     print("Process BREP shape")
-    print(shape)
-    #print shape.ShapeType()
+    print(obj)
+    print(obj.PropertiesList)
+    shape = obj.Shape
+    print shape
+    print("Faces")
     for f in shape.Faces :
+    #for f in obj.Shape.Faces :
         print f  
 
 def process_object(obj) :
@@ -172,7 +176,7 @@ def process_object(obj) :
       if case("Part::MultiCommon") :
          print("Multi Common / intersection")
 
-      process_BREP_Shape(obj)
+      process_BREP_Object(obj)
       break
 
 def export(exportList,filename) :
