@@ -152,10 +152,19 @@ def process_BREP_Object(obj) :
     print(obj.PropertiesList)
     shape = obj.Shape
     print shape
+    print(shape.ShapeType)
     print("Faces")
     for f in shape.Faces :
-    #for f in obj.Shape.Faces :
-        print f  
+        print f
+        print dir(f)
+
+    G4solid = G4VSolid()
+
+    #dir   = G4ThreeVector(0.,1.,0.)
+    #axis  = G4ThreeVector(0.,1.,0.) 
+    #point = G4Point3D(0.,0.,0.)
+    #point = G4ThreeVector(0.,0.,0.)
+    #G4FPlane(dir,axis,point,1)
 
 def process_object(obj) :
 

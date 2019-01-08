@@ -1,0 +1,3 @@
+/home/keith/FreeCAD_Geant4/myg4py/build/CMakeFiles/rebuild_cache.dir
+/home/keith/FreeCAD_Geant4/myg4py/build/CMakeFiles/myG4VSolid.dir
+/home/keith/FreeCAD_Geant4/myg4py/build/CMakeFiles/edit_cache.dir
