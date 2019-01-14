@@ -45,125 +45,125 @@ def print_version():
 # initialize
 # ==================================================================
 # set G4cout/G4cerr to Python stdout
-SetG4PyCoutDestination()
+#SetG4PyCoutDestination()
 
 # ==================================================================
 # globals, which start with "g"
 # ==================================================================
 # gRunManager
-if G4RunManager.GetRunManager() == None:
-  gRunManager = G4RunManager()
-else:
-  gRunManager = G4RunManager.GetRunManager()
-gRunManagerKernel = G4RunManagerKernel.GetRunManagerKernel()
+#if G4RunManager.GetRunManager() == None:
+#  gRunManager = G4RunManager()
+#else:
+#  gRunManager = G4RunManager.GetRunManager()
+#gRunManagerKernel = G4RunManagerKernel.GetRunManagerKernel()
 
 # gUImanager
-gUImanager = G4UImanager.GetUIpointer()
+#gUImanager = G4UImanager.GetUIpointer()
 
 # gEventManager
-gEventManager = G4EventManager.GetEventManager()
+#gEventManager = G4EventManager.GetEventManager()
 
 # gStackManager
-gStackManager = gEventManager.GetStackManager()
+#gStackManager = gEventManager.GetStackManager()
 
 # gTrackingManager
-gTrackingManager = gEventManager.GetTrackingManager()
+#gTrackingManager = gEventManager.GetTrackingManager()
 
 # gStateManager
-gStateManager = G4StateManager.GetStateManager()
-gExceptionHandler = G4ExceptionHandler() # automatically registered
+#gStateManager = G4StateManager.GetStateManager()
+#gExceptionHandler = G4ExceptionHandler() # automatically registered
 
 # gGeometryManager
-gGeometryManager = G4GeometryManager.GetInstance()
+#gGeometryManager = G4GeometryManager.GetInstance()
 
 # gTransportationManager
-gTransportationManager = G4TransportationManager.GetTransportationManager()
+#gTransportationManager = G4TransportationManager.GetTransportationManager()
 
 # gParticleTable
-gParticleTable = G4ParticleTable.GetParticleTable()
-gParticleIterator = PyG4ParticleList()
+#gParticleTable = G4ParticleTable.GetParticleTable()
+#gParticleIterator = PyG4ParticleList()
 
 # gProcessTable
-gProcessTable = G4ProcessTable.GetProcessTable()
+#gProcessTable = G4ProcessTable.GetProcessTable()
 
 # gProductionCutsTable
-gProductionCutsTable = G4ProductionCutsTable.GetProductionCutsTable()
+#gProductionCutsTable = G4ProductionCutsTable.GetProductionCutsTable()
 
 # gEmCalculator
-gEmCalculator = G4EmCalculator()
+#gEmCalculator = G4EmCalculator()
 
 # gMaterial/ElementTable
-gMaterialTable = G4Material.GetMaterialTable()
-gElementTable = G4Element.GetElementTable()
+#gMaterialTable = G4Material.GetMaterialTable()
+#gElementTable = G4Element.GetElementTable()
 
 # gNistManager (since 7.1)
-_material_class_list = dir(G4materials)
-_qfind = _material_class_list.count("G4NistManager") > 0
-if _qfind:
-  gNistManager = G4NistManager.Instance()
+#_material_class_list = dir(G4materials)
+#_qfind = _material_class_list.count("G4NistManager") > 0
+#if _qfind:
+#  gNistManager = G4NistManager.Instance()
 
 # gVisManager
-_visdriver_list = dir(G4visualization)
-_q_opengl_ix = "G4OpenGLImmediateX" in _visdriver_list
-_q_opengl_sx = "G4OpenGLStoredX" in _visdriver_list
-_q_opengl_ixm = "G4OpenGLImmediateXm" in _visdriver_list
-_q_opengl_sxm = "G4OpenGLStoredXm" in _visdriver_list
-_q_raytracer_x = "G4RayTracerX" in _visdriver_list
+#_visdriver_list = dir(G4visualization)
+#_q_opengl_ix = "G4OpenGLImmediateX" in _visdriver_list
+#_q_opengl_sx = "G4OpenGLStoredX" in _visdriver_list
+#_q_opengl_ixm = "G4OpenGLImmediateXm" in _visdriver_list
+#_q_opengl_sxm = "G4OpenGLStoredXm" in _visdriver_list
+#_q_raytracer_x = "G4RayTracerX" in _visdriver_list
 
-if G4VisManager.GetConcreteInstance() == None:
-  gVisManager = G4VisManager()
-  if _q_opengl_ix:
-    _opengl_ix = G4OpenGLImmediateX()
-  if _q_opengl_sx:
-    _opengl_sx = G4OpenGLStoredX()
-  if _q_opengl_ixm:
-    _opengl_ixm = G4OpenGLImmediateXm()
-  if _q_opengl_sxm:
-    _opengl_sxm = G4OpenGLStoredXm()
-  if _q_raytracer_x:
-    _raytracer_x = G4RayTracerX()
+#if G4VisManager.GetConcreteInstance() == None:
+#  gVisManager = G4VisManager()
+#  if _q_opengl_ix:
+#    _opengl_ix = G4OpenGLImmediateX()
+#  if _q_opengl_sx:
+#    _opengl_sx = G4OpenGLStoredX()
+#  if _q_opengl_ixm:
+#    _opengl_ixm = G4OpenGLImmediateXm()
+#  if _q_opengl_sxm:
+#    _opengl_sxm = G4OpenGLStoredXm()
+#  if _q_raytracer_x:
+#    _raytracer_x = G4RayTracerX()
 
-  _vrml1 = G4VRML1File()
-  _vrml2 = G4VRML2File()
-  _dawn = G4DAWNFILE()
-  _heprep_xml = G4HepRep()
-  _heprep_file = G4HepRepFile()
-  _atree = G4ASCIITree()
-  _raytracer = G4RayTracer()
+#  _vrml1 = G4VRML1File()
+#  _vrml2 = G4VRML2File()
+#  _dawn = G4DAWNFILE()
+#  _heprep_xml = G4HepRep()
+#  _heprep_file = G4HepRepFile()
+#  _atree = G4ASCIITree()
+#  _raytracer = G4RayTracer()
 
-  if _q_opengl_ix:
-    gVisManager.RegisterGraphicsSystem(_opengl_ix)
-  if _q_opengl_sx:
-    gVisManager.RegisterGraphicsSystem(_opengl_sx)
-  if _q_opengl_ixm:
-    gVisManager.RegisterGraphicsSystem(_opengl_ixm)
-  if _q_opengl_sxm:
-    gVisManager.RegisterGraphicsSystem(_opengl_sxm)
-  if _q_raytracer_x:
-    gVisManager.RegisterGraphicsSystem(_raytracer_x)
+#  if _q_opengl_ix:
+#    gVisManager.RegisterGraphicsSystem(_opengl_ix)
+#  if _q_opengl_sx:
+#    gVisManager.RegisterGraphicsSystem(_opengl_sx)
+#  if _q_opengl_ixm:
+#    gVisManager.RegisterGraphicsSystem(_opengl_ixm)
+#  if _q_opengl_sxm:
+#    gVisManager.RegisterGraphicsSystem(_opengl_sxm)
+#  if _q_raytracer_x:
+#    gVisManager.RegisterGraphicsSystem(_raytracer_x)
 
-  gVisManager.RegisterGraphicsSystem(_vrml1)
-  gVisManager.RegisterGraphicsSystem(_vrml2)
-  gVisManager.RegisterGraphicsSystem(_dawn)
-  gVisManager.RegisterGraphicsSystem(_heprep_xml)
-  gVisManager.RegisterGraphicsSystem(_heprep_file)
-  gVisManager.RegisterGraphicsSystem(_atree)
-  gVisManager.RegisterGraphicsSystem(_raytracer)
+#  gVisManager.RegisterGraphicsSystem(_vrml1)
+#  gVisManager.RegisterGraphicsSystem(_vrml2)
+#  gVisManager.RegisterGraphicsSystem(_dawn)
+#  gVisManager.RegisterGraphicsSystem(_heprep_xml)
+#  gVisManager.RegisterGraphicsSystem(_heprep_file)
+#  gVisManager.RegisterGraphicsSystem(_atree)
+#  gVisManager.RegisterGraphicsSystem(_raytracer)
 
-  gVisManager.Initialize()
+#  gVisManager.Initialize()
 
 # version information
-gG4Version = G4Version
-gG4Date = G4Date
-gG4VERSION_NUMBER = G4VERSION_NUMBER
+#gG4Version = G4Version
+#gG4Date = G4Date
+#gG4VERSION_NUMBER = G4VERSION_NUMBER
 
 # ------------------------------------------------------------------
 # functions
 # ------------------------------------------------------------------
-gControlExecute = gUImanager.ExecuteMacroFile
-gApplyUICommand = G4intercoms.ApplyUICommand
-gGetCurrentValues = gUImanager.GetCurrentValues
-gStartUISession = G4interface.StartUISession
+#gControlExecute = gUImanager.ExecuteMacroFile
+#gApplyUICommand = G4intercoms.ApplyUICommand
+#gGetCurrentValues = gUImanager.GetCurrentValues
+#gStartUISession = G4interface.StartUISession
 
 
 # ==================================================================
@@ -177,7 +177,7 @@ def _one_event(self):
   "generate one event."
   self.BeamOn(1)
 
-G4RunManager.OneEvent = _one_event
+#G4RunManager.OneEvent = _one_event
 
 # ------------------------------------------------------------------
 # list material information
@@ -211,7 +211,7 @@ def _list_material(self):
 
   print " +------------------------------------------------------------------"
 
-G4MaterialTable.ListMaterial = _list_material
+#G4MaterialTable.ListMaterial = _list_material
 
 
 # ------------------------------------------------------------------

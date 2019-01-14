@@ -27,3 +27,12 @@ cd build
 cmake ..
 make -j4
 make install
+
+## Install Boost
+sudo apt-get install libboost-all-dev
+
+## Symbolic links to relevant python libraries
+ln -s ~/geant4.10.05/environments/g4py/lib/Geant4 ~/.local/lib/python2.7/site-packages/Geant4
+
+ln -s ~/FreeCAD_Geant4/myg4py/lib ~/.local/lib/python2.7/site-packages/myg4py
+
