@@ -6,5 +6,5 @@ CXX_FLAGS = -fPIC
 
 CXX_DEFINES = -DmyG4VSolid_EXPORTS
 
-CXX_INCLUDES = -I/home/keith/geant4.10.05/source/global/management/include -I/home/keith/geant4.10.05/source/geometry/management/include -I/home/keith/geant4.10.05/source/global/HEPGeometry/include -I/usr/include/python3.6m 
+CXX_INCLUDES = -I/home/keith/geant4.10.05/source -I/home/keith/geant4.10.05/source/global/management/include -I/home/keith/geant4.10.05/source/geometry/management/include -I/home/keith/geant4.10.05/source/global/HEPGeometry/include -I/usr/include/python2.7 
 

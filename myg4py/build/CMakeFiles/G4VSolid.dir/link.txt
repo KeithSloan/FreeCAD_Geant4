@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC   -shared  -o G4VSolid.so CMakeFiles/G4VSolid.dir/pyG4VSolid.cpp.o -lboost_python-py36 -lpython3.6m 

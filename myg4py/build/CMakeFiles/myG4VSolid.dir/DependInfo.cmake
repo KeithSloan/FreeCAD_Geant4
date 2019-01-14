@@ -10,10 +10,11 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "/home/keith/geant4.10.05/source"
   "/home/keith/geant4.10.05/source/global/management/include"
   "/home/keith/geant4.10.05/source/geometry/management/include"
   "/home/keith/geant4.10.05/source/global/HEPGeometry/include"
-  "/usr/include/python3.6m"
+  "/usr/include/python2.7"
   )
 
 # Targets to which this target links.

@@ -4,12 +4,12 @@
 
 using namespace boost::python;
 
-//BOOST_PYTHON_MODULE(myg4py)
-BOOST_PYTHON_MODULE(myG4VSolid)
+BOOST_PYTHON_MODULE(myg4py)
 
 // ====================================================================
 // module definition
 // ====================================================================
+void export_G4VSolid()
  {
    class_<G4VSolid, G4VSolid*, boost::noncopyable>
      ("G4VSolid", "solid class", no_init)
