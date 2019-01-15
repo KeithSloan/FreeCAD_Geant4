@@ -147,8 +147,22 @@ def report_object(obj) :
          print("Wire extrusion")
          break
 
-def process_BREP_Object(obj) :
-    print("Process BREP shape")
+def mesh2Tessellate(mesh) :
+     print "mesh"
+     print mesh
+     print "mesh topology"
+     print mesh.Topology
+     print mesh.Topology[0]
+     print mesh.Topology[1]
+   
+
+def shape2Tessellate(shape) :
+     import MeshPart
+     return mesh2Tessellate(MeshPart.meshFromShape(Shape=shape, Deflection = 0.0))
+#            Deflection= params.GetFloat('meshdeflection',0.0))) 
+
+def process_Object_Shape(obj) :
+    print("Process Object Shape")
     print(obj)
     print(obj.PropertiesList)
     shape = obj.Shape
@@ -157,10 +171,12 @@ def process_BREP_Object(obj) :
     print("Faces")
     for f in shape.Faces :
         print f
-        print dir(f)
+#        print dir(f)
 
 # Virtual function    G4solid = myG4VSolid()
-    G4solid = G4BREPSolid()
+# G4solid = G4BREPSolid() G4BREPSolid depreciated
+
+    shape2Tessellate(shape)
 
     #dir   = G4ThreeVector(0.,1.,0.)
     #axis  = G4ThreeVector(0.,1.,0.) 
@@ -187,7 +203,7 @@ def process_object(obj) :
       if case("Part::MultiCommon") :
          print("Multi Common / intersection")
 
-      process_BREP_Object(obj)
+      process_Object_Shape(obj)
       break
 
 def export(exportList,filename) :
