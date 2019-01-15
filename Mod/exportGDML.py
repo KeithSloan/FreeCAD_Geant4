@@ -203,6 +203,7 @@ def export(exportList,filename) :
         report_object(obj)
         process_object(obj)
 
+
     # write GDML file              
     print("Write to GDML file")
     #navigator= gTransportationManager.GetNavigatorForTracking()
