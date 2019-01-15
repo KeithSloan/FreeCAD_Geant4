@@ -30,6 +30,7 @@ import FreeCAD, os, Part, math
 from FreeCAD import Vector
 
 from Geant4 import *
+from myg4py import *
 import g4py.Qmaterials, g4py.Qgeom
 import g4py.ExN01pl, g4py.ParticleGun
 
@@ -158,7 +159,8 @@ def process_BREP_Object(obj) :
         print f
         print dir(f)
 
-    G4solid = G4VSolid()
+# Virtual function    G4solid = myG4VSolid()
+    G4solid = G4BREPSolid()
 
     #dir   = G4ThreeVector(0.,1.,0.)
     #axis  = G4ThreeVector(0.,1.,0.) 
