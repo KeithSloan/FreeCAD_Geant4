@@ -147,14 +147,35 @@ def report_object(obj) :
          print("Wire extrusion")
          break
 
+      print("Other")
+      print(obj.TypeId)
+      break
+
+def createFacet(i,vec) :
+    facet = G4TriangularFacet()
+    facet.SetVertex(i,vec)
+    return(facet)
+
 def mesh2Tessellate(mesh) :
      print "mesh"
      print mesh
+     print dir(mesh)
+     print "Facets"
+     print mesh.Facets
      print "mesh topology"
+     print dir(mesh.Topology)
      print mesh.Topology
-     print mesh.Topology[0]
-     print mesh.Topology[1]
-   
+
+#     add name of TessellateSolid
+     tessellate = G4TessellatedSolid()
+     for f in mesh.Topology :
+         print(f)
+     #tessellate.AddFacet(createFacet( ))
+
+def process_Mesh(obj) :
+    print (obj)
+    print dir(obj)
+    mesh2Tessellate(obj.Mesh)
 
 def shape2Tessellate(shape) :
      import MeshPart
@@ -168,6 +189,17 @@ def process_Object_Shape(obj) :
     shape = obj.Shape
     print shape
     print(shape.ShapeType)
+    while switch(shape.ShapeType) : 
+
+         if case("Mesh::Feature") :
+            print("Mesh")
+	    mesh2Tessellate(mesh) 
+            break
+
+	 print("ShapeType Not handled")
+         print(shape.ShapeType)
+         break
+
     print("Faces")
     for f in shape.Faces :
         print f
@@ -185,24 +217,36 @@ def process_Object_Shape(obj) :
     #G4FPlane(dir,axis,point,1)
 
 def process_object(obj) :
-
+   
+    print("Process Object")
     while switch(obj.TypeId) :
 
       if case("Part::Cut") :
          print("Cut")
+         break
 
       if case("Part::Fuse") :
          print("Union")
+         break
 
       if case("Part::Common") :
          print("intersection")
+         break
 
       if case("Part::MultiFuse") :
          print("Multifuse") 
+         break
 
       if case("Part::MultiCommon") :
          print("Multi Common / intersection")
+         break
 
+      if case("Mesh::Feature") :
+         print("Mesh Feature") 
+         process_Mesh(obj)
+         break
+
+# Need to check obj has attribute Shape
       process_Object_Shape(obj)
       break
 

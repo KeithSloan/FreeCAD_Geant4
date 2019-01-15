@@ -7,4 +7,4 @@ cmake .. \
 make -j4
 #make configure
 #make install
-cp myG4VSolid.so ../lib
+cp myg4py.so ../lib
