@@ -2,6 +2,7 @@
 #include "G4Version.hh"
 #include "G4TessellatedSolid.hh"
 #include "G4TriangularFacet.hh"
+#include "G4VFacet.hh"
 
 using namespace boost::python;
 
@@ -35,6 +36,15 @@ BOOST_PYTHON_MODULE(myg4py)
      ("G4TriangularFacet", "solid class")
      // ---
      .def("SetVertex",      &G4TriangularFacet::SetVertex)
+
+     // operators
+     .def(self == self)
+     ;
+
+   class_<G4VFacet, G4VFacet*, boost::noncopyable>
+     ("G4TVFacet", "solid class", no_init)
+     // ---
+     .def("SetVertex",      &G4VFacet::SetVertex)
 
      // operators
      .def(self == self)

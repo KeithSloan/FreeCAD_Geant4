@@ -156,9 +156,9 @@ def createFacet(v0,v1,v2) :
     print(str(v0)+" : "+str(v1)+" : "+str(v2))
     facet = G4TriangularFacet()
 # need to convert FreeCAD base.Vector to Geant4 vector Hep3Vector
-    facet.SetVertex(0,v0)
-    facet.SetVertex(1,v1)
-    facet.SetVertex(2,v2)
+    facet.SetVertex(0,G4ThreeVector(v0[0],v0[1],v0[2]))
+    facet.SetVertex(1,G4ThreeVector(v1[0],v1[1],v1[2]))
+    facet.SetVertex(2,G4ThreeVector(v2[0],v2[1],v2[2]))
     return(facet)
 
 def mesh2Tessellate(mesh) :
