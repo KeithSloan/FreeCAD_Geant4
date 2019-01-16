@@ -17,8 +17,7 @@ include_directories(/home/keith/geant4.10.05/source)
 link_directories (${GEANT4_LIBRARY_DIR} ${Boost_LIBRARY_DIRS})
 
 add_library(myg4py SHARED 
-    myG4VSolid.cc
-    myG4TessellatedSolid.cc
+    myg4py.cc
 )
 
 target_include_directories(myg4py PUBLIC

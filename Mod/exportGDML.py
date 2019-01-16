@@ -151,9 +151,14 @@ def report_object(obj) :
       print(obj.TypeId)
       break
 
-def createFacet(i,vec) :
+def createFacet(v0,v1,v2) :
+    print("Create Facet : ")
+    print(str(v0)+" : "+str(v1)+" : "+str(v2))
     facet = G4TriangularFacet()
-    facet.SetVertex(i,vec)
+# need to convert FreeCAD base.Vector to Geant4 vector Hep3Vector
+    facet.SetVertex(0,v0)
+    facet.SetVertex(1,v1)
+    facet.SetVertex(2,v2)
     return(facet)
 
 def mesh2Tessellate(mesh) :
@@ -168,9 +173,15 @@ def mesh2Tessellate(mesh) :
 
 #     add name of TessellateSolid
      tessellate = G4TessellatedSolid()
-     for f in mesh.Topology :
-         print(f)
-     #tessellate.AddFacet(createFacet( ))
+#    mesh.Topology[0] = points
+#    mesh.Topology[1] = faces
+     for facet in mesh.Topology[1] : 
+         print(facet)
+         tessellate.AddFacet(createFacet(
+                                         mesh.Topology[0][facet[0]],
+                                         mesh.Topology[0][facet[1]],
+                                         mesh.Topology[0][facet[2]]))
+
 
 def process_Mesh(obj) :
     print (obj)
