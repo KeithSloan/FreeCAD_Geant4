@@ -152,15 +152,18 @@ def report_object(obj) :
       print(obj.TypeId)
       break
 
+def fc2g4Vec(v) :
+    return(G4ThreeVector(v[0],v[1],v[2]))
+
 def createFacet(v0,v1,v2) :
     print("Create Facet : ")
     print(str(v0)+" : "+str(v1)+" : "+str(v2))
     facet = G4TriangularFacet()
 #    facet = G4VFacet() cannot be initiated from python
 # need to convert FreeCAD base.Vector to Geant4 vector Hep3Vector
-    facet.SetVertex(0,G4ThreeVector(v0[0],v0[1],v0[2]))
-    facet.SetVertex(1,G4ThreeVector(v1[0],v1[1],v1[2]))
-    facet.SetVertex(2,G4ThreeVector(v2[0],v2[1],v2[2]))
+    facet.SetVertex(0,fc2g4Vec(v0))
+    facet.SetVertex(1,fc2g4Vec(v1))
+    facet.SetVertex(2,fc2g4Vec(v2))
     return(facet)
 
 def mesh2Tessellate(mesh) :
