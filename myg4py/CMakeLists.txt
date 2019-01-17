@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
+
+set(CMAKE_CXX_STANDARD 14)
 find_package(PythonLibs 2 REQUIRED)
 #the version of libboost_python
 #See https://gitlab.kitware.com/cmake/cmake/issues/16391

@@ -37,18 +37,18 @@ BOOST_PYTHON_MODULE(myg4py)
      // operators
      .def(self == self)
      ;
-   
-   class_<G4TriangularFacet, G4TriangularFacet*, boost::noncopyable>
-     ("G4TriangularFacet", "solid class")
+
+   class_<G4VFacet, G4VFacet*, boost::noncopyable>
+     ("G4VFacet", "solid class", no_init)
      // ---
      .def("SetVertex",      &G4TriangularFacet::SetVertex)
 
      // operators
      .def(self == self)
      ;
-
-   class_<G4VFacet, G4VFacet*, boost::noncopyable>
-     ("G4VFacet", "solid class", no_init)
+   
+   class_<G4TriangularFacet, bases<G4VFacet> , boost::noncopyable>
+     ("G4TriangularFacet", "solid class")
      // ---
      .def("SetVertex",      &G4TriangularFacet::SetVertex)
 

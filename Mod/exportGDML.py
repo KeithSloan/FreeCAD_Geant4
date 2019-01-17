@@ -182,10 +182,7 @@ def mesh2Tessellate(mesh) :
          g4_facet = createFacet(mesh.Topology[0][fc_facet[0]],
                                 mesh.Topology[0][fc_facet[1]],
                                 mesh.Topology[0][fc_facet[2]])
-#        invalid type : print(ctypes.addressof(g4_facet))
-
-         #tessellate.AddFacet(tessellate,g4_facet)
-         #tessellate.AddFacet(g4_facet)
+         tessellate.AddFacet(g4_facet)
 
 
 def process_Mesh(obj) :
