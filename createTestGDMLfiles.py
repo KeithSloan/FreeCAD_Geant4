@@ -2,7 +2,7 @@
 # ==================================================================
 # python script for Geant4Py test
 #
-#   gtest05
+#   based on test05 : Create test solid gdml files
 #   - test for CSG geometry construction in Python
 # ==================================================================
 from Geant4 import *
@@ -43,36 +43,8 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
     lv_world.SetVisAttributes(va_world)
 
     # solid object (dummy)
-    global sld_brep_box, sld_sld, lv_sld, pv_sld
-
-#    sld_sld= G4Box("dummy", 10.*cm, 10.*cm, 10.*cm)
-
-    p1 = G4ThreeVector(0.0,0.0,0.0)
-    p2 = G4ThreeVector(0.0,50.0,0.0)
-    p3 = G4ThreeVector(10.0,50.0,0.0)
-    p4 = G4ThreeVector(10.0,0.0,0.0)
-    p5 = G4ThreeVector(0.0,0.0,10.0)
-    p6 = G4ThreeVector(0.0,50.0,10.0)
-    p7 = G4ThreeVector(10.0,50.0,10.0)
-    p8 = G4ThreeVector(10.0,0.0,10.0)
-
-    #sld_brep_box = G4BREPSolidBox("BrepBox",p1,p2,p3,p4,p5,p6,p7,p8)
-    #sld_brep_box = G4VSolid.G4BREPSolid.CreatePolyhedron()
-    #sld_brep_box = G4VSolid.CreatePolyhedron()
-    sld_brep_box = G4VSolid()
-
-
-  # -----------------------------------------------------------------
-  def Construct(self): # return the world volume
-    return self.world  
-  
-# ==================================================================
-# main
-
-
-
-
-#    sld_sld= G4Box("dummy", 10.*cm, 10.*cm, 10.*cm)
+    global sld_sld, lv_sld, pv_sld
+    sld_sld= G4Box("dummy", 10.*cm, 10.*cm, 10.*cm)
     self.lv_object= lv_sld= G4LogicalVolume(sld_sld, self.air, "dummy")
     pv_sld= G4PVPlacement(None, G4ThreeVector(), "dummy", lv_sld,
                           pv_world, False, 0)
@@ -275,24 +247,6 @@ class MyDetectorConstruction(G4VUserDetectorConstruction):
     self.lv_object.SetVisAttributes(self.va_magenta)
     gRunManager.GeometryHasBeenModified()
 
-  def ConstructBREPSolidBox(self):
-    global sld_brep_box
-
-    p1 = G4Point3D(0.0,0.0,0.0)
-    p2 = G4Point3D(0.0,50.0,0.0)
-    p3 = G4Point3D(10.0,50.0,0.0)
-    p4 = G4Point3D(10.0,0.0,0.0)
-    p5 = G4Point3D(0.0,0.0,10.0)
-    p6 = G4Point3D(0.0,50.0,10.0)
-    p7 = G4Point3D(10.0,50.0,10.0)
-    p8 = G4Point3D(10.0,0.0,10.0)
-
-    sld_brep_box = G4BREPSolidBox("BrepBox",p1,p2,p3,p4,p5,p6,p7,p8)
-    self.lv_object.SetSolid(sld_brep_box)
-    self.lv_object.SetVisAttributes(self.va_magenta)
-    gRunManager.GeometryHasBeenModified()
-
-
   # -----------------------------------------------------------------
   def Construct(self): # return the world volume
     return self.world  
@@ -326,25 +280,36 @@ gApplyUICommand("/vis/scene/add/axes 0. 0. 0. 10. cm")
 
 # create a vrml file for each solid type
 f_list= (
-#  ("g4box",            myDC.ConstructBox),
-#  ("g4tubs",           myDC.ConstructTubs),
-  ("g4brep",           myDC.ConstructBREPSolidBox),
+  ("g4box",            myDC.ConstructBox),
+  ("g4tubs",           myDC.ConstructTubs),
+  ("g4cons",           myDC.ConstructCons),
+  ("g4para",           myDC.ConstructPara),
+  ("g4trd",            myDC.ConstructTrd),
+  ("g4trap",           myDC.ConstructTrap),
+  ("g4sphere",         myDC.ConstructSphere),
+  ("g4orb",            myDC.ConstructOrb),
+  ("g4torus",          myDC.ConstructTorus),
+  ("g4polycone",       myDC.ConstructPolycone),
+  ("g4polyhedra",      myDC.ConstructPolyhedra),
+  ("g4ellipticaltube", myDC.ConstructEllipticalTube),
+  ("g4ellipsoid",      myDC.ConstructEllipsoid),
+  ("g4ellipticalcone", myDC.ConstructEllipticalCone),
+  ("g4hype",           myDC.ConstructHype),
+  ("g4tet",            myDC.ConstructTet),
+  ("g4twistedbox",     myDC.ConstructTwistedBox),
+  ("g4twistedtrap",    myDC.ConstructTwistedTrap),
+  ("g4twistedtrd",     myDC.ConstructTwistedTrd),
+  ("g4twistedtubs",    myDC.ConstructTwistedTubs)
   )
 
-#for s,f in f_list:
-#  f.__call__()
-#  gRunManager.BeamOn(1)  
-#  fname= "%s.wrl" % (s)
-#  os.rename("g4_00.wrl", fname)
-
-
-# write to a GDML file
-print "\n*** write to a GDML file..."
-navigator= gTransportationManager.GetNavigatorForTracking()
-world_volume= navigator.GetWorldVolume()
-
 gdml_parser = G4GDMLParser()
-gdml_parser.Write("output.gdml", world_volume)
 
-
+for s,f in f_list:
+  f.__call__()
+  gRunManager.BeamOn(1)  
+  fname= "./gdml_solids/%s.gdml" % (s)
+#  os.rename("g4_00.wrl", fname)
+# write to a GDML file
+  print "\n*** write to a GDML file..."
+  gdml_parser.Write(fname, pv_world)
   

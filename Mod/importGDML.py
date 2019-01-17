@@ -98,15 +98,18 @@ class switch(object):
 def case(*args):
     return any((arg == switch.value for arg in args))
 
-#def createBox(solid,volref,lx,ly,lz,rot) :
-def createBox(lx,ly,lz) :
+def processPlacement(pv) :`
+    print("Process Placement")
+    print("Net Rotation")
+    print pv.GetNetRotation()
+    print("Net Translation")
+    print pv.GetNetTranslation
+
+def createBox(pv,lx,ly,lz) :
     print "CreateBox : "
 #    print solid.attrib
 #    mycube=doc.addObject('Part::Box',volref.get('ref')+'_'+solid.get('name')+'_')
     mycube=doc.addObject('Part::Box','nameBox')
-#    x = getVal(solid,'x')
-#    y = getVal(solid,'y')
-#    z = getVal(solid,'z')
     mycube.Length = lx
     mycube.Width  = ly
     mycube.Height = lz
@@ -114,6 +117,8 @@ def createBox(lx,ly,lz) :
 #    base = FreeCAD.Vector(lx-x/2,ly-y/2,lz-z/2)
 #    mycube.Placement = processPlacement(base,rot)
 #    print mycube.Placement.Rotation
+
+    mycube.Placement = processPlacement(pv)
     mycube.ViewObject.DisplayMode = 'Wireframe'
     return(mycube)
 
@@ -171,7 +176,7 @@ def parseLogicalVolume(lv,pv) :
               X = solid.GetXHalfLength()*2
               Y = solid.GetYHalfLength()*2
               Z = solid.GetZHalfLength()*2
-              obj = createBox(X,Y,Z)
+              obj = createBox(pv,X,Y,Z)
               break
 
        if case(Geant4.G4geometry.G4Cons):
