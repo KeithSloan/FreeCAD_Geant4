@@ -31,6 +31,7 @@ from FreeCAD import Vector
 
 from Geant4 import *
 from myg4py import *
+import ctypes 
 import g4py.Qmaterials, g4py.Qgeom
 import g4py.ExN01pl, g4py.ParticleGun
 
@@ -155,6 +156,7 @@ def createFacet(v0,v1,v2) :
     print("Create Facet : ")
     print(str(v0)+" : "+str(v1)+" : "+str(v2))
     facet = G4TriangularFacet()
+#    facet = G4VFacet() cannot be initiated from python
 # need to convert FreeCAD base.Vector to Geant4 vector Hep3Vector
     facet.SetVertex(0,G4ThreeVector(v0[0],v0[1],v0[2]))
     facet.SetVertex(1,G4ThreeVector(v1[0],v1[1],v1[2]))
@@ -175,12 +177,15 @@ def mesh2Tessellate(mesh) :
      tessellate = G4TessellatedSolid()
 #    mesh.Topology[0] = points
 #    mesh.Topology[1] = faces
-     for facet in mesh.Topology[1] : 
-         print(facet)
-         tessellate.AddFacet(createFacet(
-                                         mesh.Topology[0][facet[0]],
-                                         mesh.Topology[0][facet[1]],
-                                         mesh.Topology[0][facet[2]]))
+     for fc_facet in mesh.Topology[1] : 
+         print(fc_facet)
+         g4_facet = createFacet(mesh.Topology[0][fc_facet[0]],
+                                mesh.Topology[0][fc_facet[1]],
+                                mesh.Topology[0][fc_facet[2]])
+#        invalid type : print(ctypes.addressof(g4_facet))
+
+         #tessellate.AddFacet(tessellate,g4_facet)
+         #tessellate.AddFacet(g4_facet)
 
 
 def process_Mesh(obj) :
