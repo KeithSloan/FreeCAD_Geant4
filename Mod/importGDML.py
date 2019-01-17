@@ -98,12 +98,19 @@ class switch(object):
 def case(*args):
     return any((arg == switch.value for arg in args))
 
-def processPlacement(pv) :`
+def processPlacement(pv) :
     print("Process Placement")
-    print("Net Rotation")
-    print pv.GetNetRotation()
-    print("Net Translation")
-    print pv.GetNetTranslation
+    print("Volume Rotation")
+    print pv.GetRotation()
+    print("Object Rotation")
+    print pv.GetObjectRotationValue()
+    print("Volume Translation")
+    tran = pv.GetTranslation()
+    #print dir(tran)
+    print tran
+    print("Object Translation")
+    print pv.GetObjectTranslation()
+   
 
 def createBox(pv,lx,ly,lz) :
     print "CreateBox : "
@@ -118,7 +125,8 @@ def createBox(pv,lx,ly,lz) :
 #    mycube.Placement = processPlacement(base,rot)
 #    print mycube.Placement.Rotation
 
-    mycube.Placement = processPlacement(pv)
+    #mycube.Placement = processPlacement(pv)
+    processPlacement(pv)
     mycube.ViewObject.DisplayMode = 'Wireframe'
     return(mycube)
 
@@ -211,25 +219,26 @@ def parseLogicalVolume(lv,pv) :
        print "Solid type : "+str(type(solid))+" Not yet supported\n"
        break
 
-    print "Deal with Translation and Rotation"
-    t3v = pv.GetObjectTranslation()
-    print "X : "+str(t3v.getX())
-    print "Y : "+str(t3v.getY())
-    print "Z : "+str(t3v.getZ())
-    print t3v
+#    print "Deal with Translation and Rotation"
+#    t3v = pv.GetObjectTranslation()
+#    print "X : "+str(t3v.getX())
+#    print "Y : "+str(t3v.getY())
+#    print "Z : "+str(t3v.getZ())
+#    print t3v
 
-    rotMat = pv.GetObjectRotationValue()
-    print rotMat
+#    rotMat = pv.GetObjectRotationValue()
+#    print rotMat
 
 #    g4aff = G4AffineTransform()
-    g4aff = G4AffineTransform(pv.GetObjectTranslation(),
-                            pv.GetObjectTranslation())
-    print g4aff
+#    g4aff = G4AffineTransform(pv.GetObjectTranslation(),
+#                            pv.GetObjectTranslation())
+#    print g4aff
 
-    p = obj.Placement
-    print p
-    print p.toMatrix()
-    pm = FreeCAD.Matrix()
+#    p = obj.Placement
+
+#    print p
+#    print p.toMatrix()
+#    pm = FreeCAD.Matrix()
 
 def browsePhysicalVolume(pv):
     print("\nPhysical Volume  : "+str(pv.GetName()))
@@ -255,8 +264,6 @@ def processGDML(filename):
 
 #    wv = gdml_parser.GetWorldVolume(G4String(str("Default")))
     wv = gdml_parser.GetWorldVolume()
-#   lv = WV.GetLogicalVolume()
-    
     num = browsePhysicalVolume(wv)
     FreeCAD.Console.PrintMessage("Final Number : " + str(num)+'\n')
 
