@@ -211,6 +211,8 @@ def process_Object_Shape(obj) :
          print(shape.ShapeType)
          break
 
+#   Dropped through to here
+#   Need to check has Shape
     print("Faces")
     for f in shape.Faces :
         print f
@@ -219,7 +221,8 @@ def process_Object_Shape(obj) :
 # Virtual function    G4solid = myG4VSolid()
 # G4solid = G4BREPSolid() G4BREPSolid depreciated
 
-    shape2Tessellate(shape)
+#   Create Mesh from shape & then create Tessellated Solid in Geant4
+    mesh2Tessellate(shape2Tessellate(shape))
 
     #dir   = G4ThreeVector(0.,1.,0.)
     #axis  = G4ThreeVector(0.,1.,0.) 

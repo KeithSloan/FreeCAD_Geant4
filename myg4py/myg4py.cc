@@ -3,6 +3,8 @@
 #include "G4TessellatedSolid.hh"
 #include "G4TriangularFacet.hh"
 #include "G4VFacet.hh"
+#include "G4Polyhedron.hh"
+#include "G4AffineTransform.hh"
 
 using namespace boost::python;
 
@@ -16,10 +18,14 @@ BOOST_PYTHON_MODULE(myg4py)
 //     ("G4TessellatedSolid", "solid class", no_init)
      ("G4TessellatedSolid", "solid class")
      // ---
-     .def("AddFacet",       &G4TessellatedSolid::AddFacet)
-     .def("GetName",        &G4TessellatedSolid::GetName)
-     .def("SetName",        &G4TessellatedSolid::SetName)
-     .def("DumpInfo",       &G4TessellatedSolid::DumpInfo)
+     .def("AddFacet",            &G4TessellatedSolid::AddFacet)
+     .def("GetNumberOfFacets",   &G4TessellatedSolid::GetNumberOfFacets)
+     .def("SetSolidClosed",      &G4TessellatedSolid::SetSolidClosed)
+     // Does not compile clean - depreciated ??
+     //.def("CreatePolyhedron",    &G4TessellatedSolid::CreatePolyhedron) 
+     // Following appear to be depreciated
+     //.def("CreateNURBS",         &G4TessellatedSolid::CreateNURBS) 
+
 
      .def("GetCubicVolume",    &G4TessellatedSolid::GetCubicVolume)
 #if G4VERSION_NUMBER >=820
@@ -42,9 +48,19 @@ BOOST_PYTHON_MODULE(myg4py)
      ;
 
    class_<G4VFacet, G4VFacet*, boost::noncopyable>
-     ("G4TVFacet", "solid class", no_init)
+     ("G4VFacet", "solid class", no_init)
      // ---
-     .def("SetVertex",      &G4VFacet::SetVertex)
+     .def("SetVertex",      &G4TriangularFacet::SetVertex)
+
+     // operators
+     .def(self == self)
+     ;
+
+   class_<G4AffineTransform, G4AffineTransform*, boost::noncopyable>
+     ("G4AffineTransform", "solid class" )
+     // ---
+     .def("SetNetRotation",      &G4AffineTransform::SetNetRotation)
+     .def("SetNetTranslation",   &G4AffineTransform::SetNetTranslation)
 
      // operators
      .def(self == self)

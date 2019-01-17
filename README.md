@@ -2,7 +2,7 @@
 
 **Geant4 must be built using the same version of QT as FreeCAD is using.**
 
-##Building Geant4
+## Building Geant4
 
 Set variable for where Geant4 will be installed.
 export GEANT4_INSTALL=/usr/local/Geant4
@@ -17,7 +17,7 @@ cmake .. -DGEANT4_USE_GDML=ON -DGEANT4_USE_QT=ON -DCMAKE_INSTALL_PREFIX=/usr/loc
 make -j4
 make install
 
-##Build Geant4Py
+## Build Geant4Py
 
 change directory to Geant4Py
 
