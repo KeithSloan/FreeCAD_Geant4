@@ -14,12 +14,17 @@ endif()
 find_package(Geant4 REQUIRED)
 find_package(Boost COMPONENTS system python)
 
-include_directories(/home/keith/geant4.10.05/source)
+#include_directories(/home/keith/geant4.10.05/source)
+include_directories(${Geant4_INCLUDE_DIRS})
 
 link_directories (${GEANT4_LIBRARY_DIR} ${Boost_LIBRARY_DIRS})
 
 add_library(myg4py SHARED 
     myg4py.cc
+)
+
+add_library(MyFC-G4 SHARED 
+    MyFC-G4.cc
 )
 
 target_include_directories(myg4py PUBLIC

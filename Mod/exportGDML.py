@@ -31,7 +31,8 @@ from FreeCAD import Vector
 
 from Geant4 import *
 from myg4py import *
-import ctypes 
+from enums import *
+
 import g4py.Qmaterials, g4py.Qgeom
 import g4py.ExN01pl, g4py.ParticleGun
 
@@ -63,6 +64,7 @@ gApplyUICommand("/vis/open OGLSX")
 gApplyUICommand("/vis/scene/create")
 gApplyUICommand("/vis/scene/add/volume")
 gApplyUICommand("/vis/sceneHandler/attach")
+
 
 class switch(object):
     value = None
@@ -158,12 +160,17 @@ def fc2g4Vec(v) :
 def createFacet(v0,v1,v2) :
     print("Create Facet : ")
     print(str(v0)+" : "+str(v1)+" : "+str(v2))
-    facet = G4TriangularFacet()
-#    facet = G4VFacet() cannot be initiated from python
+    v0g4 = fc2g4Vec(v0)
+    v1g4 = fc2g4Vec(v1)
+    v2g4 = fc2g4Vec(v2)
+    facet = G4TriangularFacet(v0g4,v1g4,v2g4,enums(G4FacetVertexType.A))
+#   facet = G4VFacet() cannot be initiated from python
+#   G4TrianglerFacet needs to be constructed with all three vectors
+#   otherwise Isdefined is false and one gets an error 
 # need to convert FreeCAD base.Vector to Geant4 vector Hep3Vector
-    facet.SetVertex(0,fc2g4Vec(v0))
-    facet.SetVertex(1,fc2g4Vec(v1))
-    facet.SetVertex(2,fc2g4Vec(v2))
+#    facet.SetVertex(0,fc2g4Vec(v0))
+#    facet.SetVertex(1,fc2g4Vec(v1))
+#    facet.SetVertex(2,fc2g4Vec(v2))
     return(facet)
 
 def mesh2Tessellate(mesh) :

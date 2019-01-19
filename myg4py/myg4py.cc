@@ -46,9 +46,15 @@ BOOST_PYTHON_MODULE(myg4py)
      // operators
      .def(self == self)
      ;
+
+   enum_<G4FacetVertexType>("VertexType")
+        .value("A",ABSOLUTE)
+        .value("R",RELATIVE)
+        ;
    
    class_<G4TriangularFacet, bases<G4VFacet> , boost::noncopyable>
      ("G4TriangularFacet", "solid class")
+     .def(init<G4ThreeVector,G4ThreeVector,G4ThreeVector,G4FacetVertexType>())
      // ---
      .def("SetVertex",      &G4TriangularFacet::SetVertex)
 
