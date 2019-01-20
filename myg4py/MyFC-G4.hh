@@ -28,6 +28,9 @@
 #include <G4TriangularFacet.hh>
 
 // FreeCAD Includes
+#include <FCConfig.h>
+#include <Vector3D.h>
+#include <Base/Matrix.h>
 //#include <Gui/Workbench.h>
 
 //#include <Base/Placement.h>
@@ -45,9 +48,12 @@ class MyFC_2_G4TriangularFace
 
 public:
       MyFC_2_G4TriangularFace();
+      G4TriangularFace init(&Vector3 X,  &Vector3 Y, &Vector3 Z);
 //      Virtual ~MyFC_2_G4TriangularFace();
+      G4TriangularFacet& returnFacet() {return facet;}
 
-protected:
+private:
+      G4TriangularFacet facet;
 };
 
 //class G4TriangularFacet MyG4_2_FC_Placement
@@ -57,8 +63,10 @@ class MyG4_2_FC_Placement
 public:
       MyG4_2_FC_Placement();
 //     Virtual ~MyG4_2_FC_Placement();
+      &Matrix4D returnMatrix() {return matrix;}
 
-protected:
+private:
+     Matrix4D matrix;
 };
 
 } // namespace FC_G4_LIB

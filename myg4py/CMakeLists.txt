@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(CMAKE_CXX_STANDARD 14)
+#set(CMAKE_CXX_STANDARD 14)
 find_package(PythonLibs 2 REQUIRED)
 #the version of libboost_python
 #See https://gitlab.kitware.com/cmake/cmake/issues/16391
@@ -15,7 +15,7 @@ find_package(Geant4 REQUIRED)
 find_package(Boost COMPONENTS system python)
 
 #include_directories(/home/keith/geant4.10.05/source)
-include_directories(${Geant4_INCLUDE_DIRS})
+include_directories(${Geant4_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 link_directories (${GEANT4_LIBRARY_DIR} ${Boost_LIBRARY_DIRS})
 
@@ -28,11 +28,7 @@ add_library(MyFC-G4 SHARED
 )
 
 target_include_directories(myg4py PUBLIC
-#   /home/keith/geant4.10.05/source/global/management/include 
-#   /home/keith/geant4.10.05/source/geometry/management/include 
-#   /home/keith/geant4.10.05/source/geometry/solids/specfic/include 
-#   /home/keith/geant4.10.05/source/global/HEPGeometry/include 
-   ${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} ${Geant4_INCLUDE_DIRS} )
+   ${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} ${Geant4_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include )
 
 target_link_libraries(myg4py
    ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${Geant4_LIBRARIES})

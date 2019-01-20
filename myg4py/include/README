@@ -1,0 +1,2 @@
+This directory contains copies of FreeCAD's includes required by this module.
+In the long term workbench needs adding to FreeCAD source, but this is a problemas also needs Geant4 source.
