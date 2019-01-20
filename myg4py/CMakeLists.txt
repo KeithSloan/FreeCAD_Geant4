@@ -15,7 +15,7 @@ find_package(Geant4 REQUIRED)
 find_package(Boost COMPONENTS system python)
 
 #include_directories(/home/keith/geant4.10.05/source)
-include_directories(${Geant4_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${Geant4_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 link_directories (${GEANT4_LIBRARY_DIR} ${Boost_LIBRARY_DIRS})
 
