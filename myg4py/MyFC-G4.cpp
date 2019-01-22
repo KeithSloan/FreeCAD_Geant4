@@ -21,63 +21,28 @@
 //*   Acknowledgements :                                                    *
 //*                                                                         *
 //***************************************************************************
-#ifndef FC_G4_LIB_H
-#define FC_G4_LIB_H
+#include "MyFC-G4.hh"
 
-// G4 Includes
-#include <G4TriangularFacet.hh>
-
-// FreeCAD Includes
-#include <FCConfig.h>
-#include <Vector3D.h>
-#include <Base/Matrix.h>
-//#include <Gui/Workbench.h>
-
-//#include <Base/Placement.h>
-//#include <Base/Rotation.h
-
-namespace FC_G4_LIB {
-
-/**
- * @author Keith Sloan
- */
-
-//class G4TriangularFacet MyFC_2_G4TriangularFace
-class MyFC_2_G4TriangularFace
+class MyG4TriangularFacet : public G4TriangularFacet
 {
 
 public:
-      MyFC_2_G4TriangularFace();
-      G4TriangularFace init(&Vector3 X,  &Vector3 Y, &Vector3 Z);
+      MyG4TriangularFacet(Base::Vector3f& v0,
+                          Base::Vector3f& v1,
+                          Base::Vector3f& v2);
 //      Virtual ~MyFC_2_G4TriangularFace();
-      G4TriangularFacet& returnFacet() {return facet;}
 
 private:
-      G4TriangularFacet facet;
 };
 
-//class G4TriangularFacet MyG4_2_FC_Placement
-class MyG4_2_FC_Placement
+
+MyG4TriangularFacet::MyG4TriangularFacet(Base::Vector3f &v0,
+                          Base::Vector3f& v1,
+                          Base::Vector3f& v2)
+                                         
 {
-
-public:
-      MyG4_2_FC_Placement();
-//     Virtual ~MyG4_2_FC_Placement();
-      &Matrix4D returnMatrix() {return matrix;}
-
-private:
-     Matrix4D matrix;
-};
-
-} // namespace FC_G4_LIB
-
-class MyPlacement
-{
-public:
-        MyPlacement();
-
-protected:
-};
-
-#endif
-
+G4TriangularFacet(G4ThreeVector(v0.x,v0.y,v0.z),
+                  G4ThreeVector(v1.x,v1.y,v1.z),
+                  G4ThreeVector(v2.x,v2.y,v2.z),
+              ABSOLUTE);
+}

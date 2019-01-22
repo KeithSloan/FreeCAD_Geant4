@@ -24,7 +24,7 @@ add_library(myg4py SHARED
 )
 
 add_library(MyFC-G4 SHARED 
-    MyFC-G4.cc
+    MyFC-G4.cpp
 )
 
 target_include_directories(myg4py PUBLIC
