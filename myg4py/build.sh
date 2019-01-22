@@ -7,4 +7,5 @@ cmake .. \
 make -j4
 #make configure
 #make install
-cp myg4py.so ../lib
+cp MyG4py.so ../lib
+#cp MyFC-G4.so ../lib

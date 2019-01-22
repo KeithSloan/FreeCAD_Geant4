@@ -19,25 +19,25 @@ include_directories(${Geant4_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} ${CMAKE_CURREN
 
 link_directories (${GEANT4_LIBRARY_DIR} ${Boost_LIBRARY_DIRS})
 
-add_library(myg4py SHARED 
-    myg4py.cc
+add_library(MyG4py SHARED 
+    MyG4py.cpp
 )
 
 add_library(MyFC-G4 SHARED 
     MyFC-G4.cpp
 )
 
-target_include_directories(myg4py PUBLIC
+target_include_directories(MyG4py PUBLIC
    ${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} ${Geant4_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include )
 
-target_link_libraries(myg4py
+target_link_libraries(MyG4py
    ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${Geant4_LIBRARIES})
-#add_dependencies(myg4py boost)
+#add_dependencies(MyG4py boost)
 #configure_file(__init__.py ${CMAKE_CURRENT_BINARY_DIR}/src/__init__.py COPYONLY)
 
-set_target_properties(myg4py PROPERTIES PREFIX .so)
-set_target_properties(myg4py PROPERTIES PREFIX "")
+set_target_properties(MyG4py PROPERTIES PREFIX .so)
+set_target_properties(MyG4py PROPERTIES PREFIX "")
 
-#install(TARGETS myg4py __init__.py DESTINATION "${PYTHON_INSTALL_PATH}")
-#install(TARGETS myg4py DESTINATION "${PYTHON_INSTALL_PATH}")
-install(TARGETS myg4py DESTINATION lib )
+#install(TARGETS MyG4py __init__.py DESTINATION "${PYTHON_INSTALL_PATH}")
+#install(TARGETS MyG4py DESTINATION "${PYTHON_INSTALL_PATH}")
+install(TARGETS MyG4py DESTINATION lib )
