@@ -21,7 +21,8 @@
 //*   Acknowledgements :                                                    *
 //*                                                                         *
 //***************************************************************************
-#include "MyFC-G4.hh"
+#include "Base/Vector3D.h"
+#include "G4TriangularFacet.hh"
 
 class MyG4TriangularFacet : public G4TriangularFacet
 {
