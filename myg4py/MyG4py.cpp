@@ -8,7 +8,7 @@
 
 using namespace boost::python;
 
-BOOST_PYTHON_MODULE(myg4py)
+BOOST_PYTHON_MODULE(MyG4py)
 
 // ====================================================================
 // module definition

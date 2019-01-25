@@ -12,7 +12,7 @@ __date__ = 'December/2018'
 __author__ = 'K.Murakami (Koichi.Murakami@kek.jp)'
 
 # import submodules
-from myg4py import *
+from MyG4py import *
 #from G4interface import *
 #from G4intercoms import *
 #from G4global import *
