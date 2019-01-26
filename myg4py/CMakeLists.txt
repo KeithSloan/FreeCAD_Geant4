@@ -19,12 +19,12 @@ include_directories(${Geant4_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} ${CMAKE_CURREN
 
 link_directories (${GEANT4_LIBRARY_DIR} ${Boost_LIBRARY_DIRS})
 
+#add_library(MyFC_G4 SHARED 
+#    MyFC_G4.cpp
+#)
+
 add_library(MyG4py SHARED 
     MyG4py.cpp
-)
-
-add_library(MyFC_G4 SHARED 
-    MyFC_G4.cpp
 )
 
 target_include_directories(MyG4py PUBLIC

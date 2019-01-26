@@ -1,12 +1,43 @@
 #include <boost/python.hpp>
+// Geant4 includes
 #include "G4Version.hh"
 #include "G4TessellatedSolid.hh"
 #include "G4TriangularFacet.hh"
 #include "G4VFacet.hh"
 #include "G4Polyhedron.hh"
 #include "G4AffineTransform.hh"
+// FreeCAD includes
+#include "Base/Vector3D.h"
 
 using namespace boost::python;
+
+// ====================================================================
+// Function definitions Class then Function
+// ====================================================================
+class MyG4TriangularFacet : public G4TriangularFacet
+{
+
+public:
+      MyG4TriangularFacet(Base::Vector3f v0,
+                          Base::Vector3f v1,
+                          Base::Vector3f v2);
+//      Virtual ~MyFC_2_G4TriangularFace();
+
+private:
+};
+
+
+// Constructor
+MyG4TriangularFacet::MyG4TriangularFacet(Base::Vector3f v0,
+                          Base::Vector3f v1,
+                          Base::Vector3f v2)
+
+{
+G4TriangularFacet(G4ThreeVector(v0.x,v0.y,v0.z),
+                  G4ThreeVector(v1.x,v1.y,v1.z),
+                  G4ThreeVector(v2.x,v2.y,v2.z),
+              ABSOLUTE);
+}
 
 BOOST_PYTHON_MODULE(MyG4py)
 
@@ -67,6 +98,13 @@ BOOST_PYTHON_MODULE(MyG4py)
      // ---
      .def("SetNetRotation",      &G4AffineTransform::SetNetRotation)
      .def("SetNetTranslation",   &G4AffineTransform::SetNetTranslation)
+
+     // operators
+     .def(self == self)
+     ;
+
+   class_<MyG4TriangularFacet>("MyG4TriangularFacet", init<Base::Vector3f, Base::Vector3f, Base::Vector3f>())
+     //  
 
      // operators
      .def(self == self)

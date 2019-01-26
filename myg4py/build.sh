@@ -8,4 +8,4 @@ make -j4
 #make configure
 #make install
 cp MyG4py.so ../lib
-cp libMyFC_G4.so ../lib
+#cp libMyFC_G4.so ../lib
