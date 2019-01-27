@@ -1,4 +1,6 @@
 #include <boost/python.hpp>
+// CLHEP includes
+#include "CLHEP/Vector/ThreeVector.h"
 // Geant4 includes
 #include "G4Version.hh"
 #include "G4TessellatedSolid.hh"
@@ -18,19 +20,28 @@ class MyG4TriangularFacet : public G4TriangularFacet
 {
 
 public:
-      MyG4TriangularFacet(Base::Vector3f v0,
-                          Base::Vector3f v1,
-                          Base::Vector3f v2);
+     MyG4TriangularFacet();
+
+     MyG4TriangularFacet(Base::Vector3d v0,
+                         Base::Vector3d v1,
+                         Base::Vector3d v2);
+
+     MyG4TriangularFacet(G4ThreeVector v0,
+                         G4ThreeVector v1,
+                         G4ThreeVector v2);
+
 //      Virtual ~MyFC_2_G4TriangularFace();
 
 private:
 };
 
 
-// Constructor
-MyG4TriangularFacet::MyG4TriangularFacet(Base::Vector3f v0,
-                          Base::Vector3f v1,
-                          Base::Vector3f v2)
+// Constructors
+MyG4TriangularFacet::MyG4TriangularFacet() {}
+
+MyG4TriangularFacet::MyG4TriangularFacet(Base::Vector3d v0,
+                          Base::Vector3d v1,
+                          Base::Vector3d v2)
 
 {
 G4TriangularFacet(G4ThreeVector(v0.x,v0.y,v0.z),
@@ -38,6 +49,22 @@ G4TriangularFacet(G4ThreeVector(v0.x,v0.y,v0.z),
                   G4ThreeVector(v2.x,v2.y,v2.z),
               ABSOLUTE);
 }
+
+MyG4TriangularFacet::MyG4TriangularFacet(G4ThreeVector v0,
+                        G4ThreeVector v1,
+                        G4ThreeVector v2)
+
+{
+G4TriangularFacet(v0,v1,v2,ABSOLUTE);
+}
+
+//MyG4TriangularFacet::MyG4TriangularFacet(CLHEP::HepVector& v0,
+//                        CLHEP::HepVector& v1,
+//                        CLHEP::HepVector& v2)
+
+//{
+//G4TriangularFacet(v0,v1,v2,ABSOLUTE);
+//}
 
 BOOST_PYTHON_MODULE(MyG4py)
 
@@ -103,8 +130,10 @@ BOOST_PYTHON_MODULE(MyG4py)
      .def(self == self)
      ;
 
-   class_<MyG4TriangularFacet>("MyG4TriangularFacet", init<Base::Vector3f, Base::Vector3f, Base::Vector3f>())
-     //  
+   class_<MyG4TriangularFacet>("MyG4TriangularFacet")
+     // 
+     .def(init<Base::Vector3d, Base::Vector3d, Base::Vector3d>())
+     .def(init<G4ThreeVector,G4ThreeVector,G4ThreeVector>())
 
      // operators
      .def(self == self)
