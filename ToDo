@@ -1,0 +1,10 @@
+export gdml is currently empty file - Investigate
+ 
+ToFix
+=====`
+G4MyG4TriangularFacet constructor with FreeCAD vectors
+
+Tidy Ups
+========
+update softLinks to add library to python module library in location
+independant way
