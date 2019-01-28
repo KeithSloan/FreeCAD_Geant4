@@ -34,5 +34,7 @@ sudo apt-get install libboost-all-dev
 ## Symbolic links to relevant python libraries
 ln -s ~/geant4.10.05/environments/g4py/lib/Geant4 ~/.local/lib/python2.7/site-packages/Geant4
 
-ln -s ~/FreeCAD_Geant4/myg4py/lib ~/.local/lib/python2.7/site-packages/MyG4py
+ln -s ~/FreeCAD_Geant4/MyG4py/lib ~/.local/lib/python2.7/site-packages/MyG4py
 
+## ToDo
+Add sym links to python libraries to softLink script - make location neutral

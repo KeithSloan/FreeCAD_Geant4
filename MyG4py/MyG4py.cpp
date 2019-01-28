@@ -130,7 +130,7 @@ BOOST_PYTHON_MODULE(MyG4py)
      .def(self == self)
      ;
 
-   class_<MyG4TriangularFacet>("MyG4TriangularFacet")
+   class_<MyG4TriangularFacet, bases<G4VFacet>> ("MyG4TriangularFacet")
      // 
      .def(init<Base::Vector3d, Base::Vector3d, Base::Vector3d>())
      .def(init<G4ThreeVector,G4ThreeVector,G4ThreeVector>())
