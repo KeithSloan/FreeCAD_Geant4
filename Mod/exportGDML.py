@@ -56,6 +56,10 @@ g4py.Qgeom.Construct()
 #  minimal physics list
 g4py.ExN01pl.Construct()
 
+# set primary generator action
+g4py.ParticleGun.Construct()
+
+
 #  initialize
 gRunManager.Initialize()
 
@@ -64,7 +68,7 @@ gApplyUICommand("/vis/open OGLSX")
 gApplyUICommand("/vis/scene/create")
 gApplyUICommand("/vis/scene/add/volume")
 gApplyUICommand("/vis/sceneHandler/attach")
-
+gApplyUICommand("/vis/viewer/set/viewpointThetaPhi 90. -90.")
 
 class switch(object):
     value = None
@@ -290,10 +294,12 @@ def export(exportList,filename) :
 
     # write GDML file              
     print("Write to GDML file")
-    #navigator= gTransportationManager.GetNavigatorForTracking()
-    #world_volume= navigator.GetWorldVolume()
+    navigator= gTransportationManager.GetNavigatorForTracking()
+    world_volume= navigator.GetWorldVolume()
 
-    #gdml_parser = G4GDMLParser()
-    #gdml_parser.Write(filename, world_volume)
+    gdml_parser = G4GDMLParser()
+    #print(filename)
+    #print(type(filename))
+    gdml_parser.Write(G4String(str(filename)), world_volume)
     
     FreeCAD.Console.PrintMessage("successfully exported "+filename)
