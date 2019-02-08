@@ -3,6 +3,7 @@
 #include "CLHEP/Vector/ThreeVector.h"
 // Geant4 includes
 #include "G4Version.hh"
+#include "G4VPhysicalVolume.hh"
 #include "G4TessellatedSolid.hh"
 #include "G4TriangularFacet.hh"
 #include "G4VFacet.hh"
@@ -66,7 +67,6 @@ G4TriangularFacet(v0,v1,v2,ABSOLUTE);
 //G4TriangularFacet(v0,v1,v2,ABSOLUTE);
 //}
 
-BOOST_PYTHON_MODULE(MyG4py)
 
 // ====================================================================
 // module definition
@@ -131,11 +131,12 @@ BOOST_PYTHON_MODULE(MyG4py)
      ;
 
    class_<MyG4TriangularFacet, bases<G4VFacet>> ("MyG4TriangularFacet")
-     // 
+     // Constructors 
      .def(init<Base::Vector3d, Base::Vector3d, Base::Vector3d>())
      .def(init<G4ThreeVector,G4ThreeVector,G4ThreeVector>())
 
      // operators
      .def(self == self)
      ;
+
  }

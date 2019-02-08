@@ -31,10 +31,14 @@ from FreeCAD import Vector
 
 from Geant4 import *
 from MyG4py import *
+
+import g4py.NISTmaterials
 #from enums import *
 
-import g4py.Qmaterials, g4py.Qgeom
-import g4py.ExN01pl, g4py.ParticleGun
+import g4py.Qmaterials
+import g4py.Qgeom
+import g4py.ExN01pl
+import g4py.ParticleGun
 
 try: import FreeCADGui
 except ValueError: gui = False
@@ -57,7 +61,7 @@ g4py.Qgeom.Construct()
 g4py.ExN01pl.Construct()
 
 # set primary generator action
-g4py.ParticleGun.Construct()
+#g4py.ParticleGun.Construct()
 
 
 #  initialize
@@ -79,14 +83,38 @@ class switch(object):
 def case(*args):
     return any((arg == switch.value for arg in args))
 
+def DefineMaterials():
 
-def ConstructWorld(self):
+    # Materials from DataBase 
+    nist = G4NistManager.Instance()
+    air = nist.FindOrBuildMaterial("G4_AIR")
+    global air
+   
+    # Our defined Materials 
+    #Fe = G4Element(G4String("Iron"),G4String("Fe"),"z=26.","55.845*g/mole")
+    Fe = G4Element(G4String("Iron"),G4String("Fe"),26.0,55.845*g/mole)
+    #Cr = G4Element(G4String("Chromium"),G4String("Cr"),"z=24.","51.9961*g/mole")
+    Cr = G4Element(G4String("Chromium"),G4String("Cr"),24.0,51.9961*g/mole)
+    #Ni = G4Element(G4String("Nickel"),G4String("Ni"),"z=28.","58.6934*g/mole")
+    Ni = G4Element(G4String("Nickel"),G4String("Ni"),28.0,58.6934*g/mole)
+
+    global SSteel,Fe,Cr,Ni
+    #SSteel = G4Material("SSteel","density=8.03*g/cm3",components)
+    SSteel = G4Material("SSteel",8.03,3)
+    #SSteel.AddElement(Fe,"74*perCent")
+    SSteel.AddElement(Fe,0.74)
+    #SSteel.AddElement(Cr,"18*perCent")
+    SSteel.AddElement(Cr,0.18)
+    #SSteel.AddElement(Ni,"8*perCent")
+    SSteel.AddElement(Ni,0.8)
+
+def ConstructWorld():
     # Python has automatic garbage collection system.
     # Geometry objects must be defined as GLOBAL not to be deleted.
     global sld_world, lv_world, pv_world, va_world
 
     sld_world= G4Box("world", 1.*m, 1.*m, 1.*m)
-    lv_world= G4LogicalVolume(sld_world, self.air, "world")
+    lv_world= G4LogicalVolume(sld_world, air, "world")
     pv_world= G4PVPlacement(G4Transform3D(), lv_world, "world",
                             None, False, 0)
 
@@ -97,11 +125,29 @@ def ConstructWorld(self):
     # solid object (dummy)
 #    global sld_brep_box, sld_sld, lv_sld, pv_sld
 
-#    sld_sld= G4Box("dummy", 10.*cm, 10.*cm, 10.*cm)
+    solidBox = G4Box("dummy", 10.*cm, 10.*cm, 10.*cm)
+    lvBox = G4LogicalVolume(solidBox,SSteel,"box")
+
+    #pos_x = G4double(-1.0*meter)
+    pos_x = -1.0
+    #pos_y = G4doule(0.0*meter)
+    pos_y = 0.0
+    #pos_z = G4double(0.0*meter)
+    pos_z = 0.0
+
+    # Look for better constructor options for G4PVPlacement
+    pvBox = G4PVPlacement(G4RotationMatrix(),  # no rotaion \
+                      G4ThreeVector(pos_x, pos_y, pos_z),   \
+                      G4String("Box"),         # its name   \ 
+                      lvBox,                   # its logical volume \
+                      pv_world,                # its mother (physical) volume \
+                      False,0)
+
 
 #    p1 = G4ThreeVector(0.0,0.0,0.0)
 #    p2 = G4ThreeVector(0.0,50.0,0.0)
 
+    return(pv_world)
 
 def report_object(obj) :
     
@@ -285,6 +331,8 @@ def export(exportList,filename) :
     # process Objects
     print("\nStart GDML Export 0.1")
 
+    DefineMaterials()
+    world_volume = ConstructWorld()
     for obj in exportList :
         print(obj)
         print("Name : "+obj.Name)
@@ -295,7 +343,9 @@ def export(exportList,filename) :
     # write GDML file              
     print("Write to GDML file")
     navigator= gTransportationManager.GetNavigatorForTracking()
-    world_volume= navigator.GetWorldVolume()
+    #world_volume= navigator.GetWorldVolume()
+
+
 
     gdml_parser = G4GDMLParser()
     #print(filename)
