@@ -157,38 +157,54 @@ def createTube(solid,volref,lx,ly,lz,rot) :
     mytube.Placement = processPlacement(base,rot)
     print mytube.Placement.Rotation
 
-def createCone(solid,volref,lx,ly,lz,rot) :
+def createGDMLCone(volref,solid,material) :
+    from GDMLObjects import GDMLCone, ViewProvider
     print "CreateCone : "
-    print solid.attrib
+    mycone=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","GDMLCone")
+    rmin1 = solid.GetInnerRadiusMinusZ()
+    rmax1 = solid.GetInnerRadiusPlusZ()
+    rmin2 = solid.GetOuterRadiusMinusZ()
+    rmax2 = solid.GetOuterRadiusPlusZ()
+    z = solid.GetZHalfLength()*2
+    startphi = solid.GetStartPhiAngle()
+    deltaphi = solid.GetDeltaPhiAngle()
+    GDMLCone(mycone,rmin1,rmax1,rmin2,rmax2,z,startphi,deltaphi, \
+            "rad","mm",material)
+    print("GDMLCone initiated")
+    ViewProvider(mycone.ViewObject)
+    print("GDMLCone ViewProvided - added")
+    return(mycone)
 
-def createSolid(solid,volref,lx,ly,lz,rot) :
-    while switch(solid.tag):
-        if case('box'):
-           createBox(solid,volref,lx,ly,lz,rot) 
-           break
-        if case('tube'):
-           createTube(solid,volref,lx,ly,lz,rot) 
-           break
-        if case('cone'):
-           createCone(solid,volref,lx,ly,lz,rot) 
-           break
-        print "Solid : "+solid.tag+" Not yet supported"
-        break
+def createGDMLBox(volref,solid,material) :
+    from GDMLObjects import GDMLBox, ViewProvider
+    print "CreateBox : "
+    mybox=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","GDMLBox")
+    x = solid.GetXHalfLength()*2
+    y = solid.GetYHalfLength()*2
+    z = solid.GetZHalfLength()*2
+    GDMLBox(mybox,x,y,z,"mm",material)
+    ViewProvider(mybox.ViewObject)
+    #print "Logical Position : "+str(lx)+','+str(ly)+','+str(lz)
+    #base = FreeCAD.Vector(lx-x/2,ly-y/2,lz-z/2)
+    #mycube.Placement = processPlacement(base,rot)
+    #print mycube.Placement.Rotation
+    #mycube.ViewObject.DisplayMode = 'Wireframe'
+    return mybox
+
 
 def parseLogicalVolume(lv,pv) :
     print("Parse Logical Volume "+str(lv.GetName()))
 #   print dir(lv)
     solid = lv.GetSolid()
+    G4mat = lv.GetMaterial()
+    material = str(G4mat.GetName())
     while switch(type(solid)) :
        if case(Geant4.G4geometry.G4Box):
-              X = solid.GetXHalfLength()*2
-              Y = solid.GetYHalfLength()*2
-              Z = solid.GetZHalfLength()*2
-              obj = createBox(pv,X,Y,Z)
+              obj = createGDMLBox(pv,solid,material)
               break
 
        if case(Geant4.G4geometry.G4Cons):
-              createCons()
+              obj = createGDMLCone(pv,solid,material)
               break
 
        if case(Geant4.G4geometry.G4Tubs):
@@ -267,18 +283,5 @@ def processGDML(filename):
     num = browsePhysicalVolume(wv)
     FreeCAD.Console.PrintMessage("Final Number : " + str(num)+'\n')
 
-#    LV = Reader.GetVolume(Reader.GetSetup("Default"))
-
-#    import xml.etree.ElementTree as ET
-#    tree = ET.parse(filename)
-#    root = tree.getroot()
- 
-#    for setup in root.find('setup'):
-#        print setup.attrib
-#        ref = getRef(setup)
-#        parseVolume(root,ref,0,0,0)
-
-#    doc.recompute()
-#    if printverbose:
-    print('End ImportGDML')
+    doc.recompute()
     FreeCAD.Console.PrintMessage('End processing GDML file\n')

@@ -1,3 +1,5 @@
+// C++ includes
+#include <iostream>
 #include <boost/python.hpp>
 // CLHEP includes
 #include "CLHEP/Vector/ThreeVector.h"
@@ -12,6 +14,7 @@
 // FreeCAD includes
 #include "Base/Vector3D.h"
 
+using namespace std;
 using namespace boost::python;
 
 // ====================================================================
@@ -27,9 +30,9 @@ public:
                          Base::Vector3d v1,
                          Base::Vector3d v2);
 
-     MyG4TriangularFacet(G4ThreeVector v0,
-                         G4ThreeVector v1,
-                         G4ThreeVector v2);
+     MyG4TriangularFacet(const G4ThreeVector & v0,
+                         const G4ThreeVector & v1,
+                         const G4ThreeVector & v2);
 
 //      Virtual ~MyFC_2_G4TriangularFace();
 
@@ -38,25 +41,33 @@ private:
 
 
 // Constructors
-MyG4TriangularFacet::MyG4TriangularFacet() {}
+MyG4TriangularFacet::MyG4TriangularFacet() {cout << "Default";}
 
 MyG4TriangularFacet::MyG4TriangularFacet(Base::Vector3d v0,
                           Base::Vector3d v1,
                           Base::Vector3d v2)
 
 {
+G4cout << "Facet Constructor FreeCAD : ";
 G4TriangularFacet(G4ThreeVector(v0.x,v0.y,v0.z),
                   G4ThreeVector(v1.x,v1.y,v1.z),
                   G4ThreeVector(v2.x,v2.y,v2.z),
               ABSOLUTE);
 }
 
-MyG4TriangularFacet::MyG4TriangularFacet(G4ThreeVector v0,
-                        G4ThreeVector v1,
-                        G4ThreeVector v2)
+MyG4TriangularFacet::MyG4TriangularFacet(const G4ThreeVector &v0,
+                        const G4ThreeVector &v1,
+                        const G4ThreeVector &v2)
 
 {
-G4TriangularFacet(v0,v1,v2,ABSOLUTE);
+G4cout << "Facet Constructor G4 : " << v0 << " : " << v1 << " : " << v2;
+// Not sure why the following line does not work
+//G4TriangularFacet(v0,v1,v2,ABSOLUTE);
+// Try the long way
+G4TriangularFacet facet;
+facet.SetVertex(0,v0);
+facet.SetVertex(1,v1);
+facet.SetVertex(2,v2);
 }
 
 //MyG4TriangularFacet::MyG4TriangularFacet(CLHEP::HepVector& v0,
@@ -71,8 +82,19 @@ G4TriangularFacet(v0,v1,v2,ABSOLUTE);
 // ====================================================================
 // module definition
 // ====================================================================
- {
-   class_<G4TessellatedSolid, G4TessellatedSolid*, boost::noncopyable>
+BOOST_PYTHON_MODULE(MyG4py)
+{
+   class_<G4VFacet, G4VFacet*, boost::noncopyable>
+     ("G4VFacet", "solid class", no_init)
+     // ---
+     .def("SetVertex",      &G4TriangularFacet::SetVertex)
+
+     // operators
+     .def(self == self)
+     ;
+
+    class_<G4TessellatedSolid, bases<G4VSolid> , boost::noncopyable>
+//    class_<G4TessellatedSolid, G4TessellatedSolid* , boost::noncopyable>
 //     ("G4TessellatedSolid", "solid class", no_init)
      ("G4TessellatedSolid", "solid class")
      // ---
@@ -96,15 +118,6 @@ G4TriangularFacet(v0,v1,v2,ABSOLUTE);
      .def(self == self)
      ;
 
-   class_<G4VFacet, G4VFacet*, boost::noncopyable>
-     ("G4VFacet", "solid class", no_init)
-     // ---
-     .def("SetVertex",      &G4TriangularFacet::SetVertex)
-
-     // operators
-     .def(self == self)
-     ;
-
    enum_<G4FacetVertexType>("VertexType")
         .value("A",ABSOLUTE)
         .value("R",RELATIVE)
@@ -114,7 +127,11 @@ G4TriangularFacet(v0,v1,v2,ABSOLUTE);
      ("G4TriangularFacet", "solid class")
      .def(init<G4ThreeVector,G4ThreeVector,G4ThreeVector,G4FacetVertexType>())
      // ---
-     .def("SetVertex",      &G4TriangularFacet::SetVertex)
+     .def("SetVertex",             &G4TriangularFacet::SetVertex)
+     .def("GetArea",               &G4TriangularFacet::GetArea)
+     .def("IsDefined",             &G4TriangularFacet::IsDefined)
+     .def("GetNumberOfVertices",   &G4TriangularFacet::GetNumberOfVertices)
+     .def("GetVertex",             &G4TriangularFacet::GetVertex)
 
      // operators
      .def(self == self)
@@ -130,7 +147,7 @@ G4TriangularFacet(v0,v1,v2,ABSOLUTE);
      .def(self == self)
      ;
 
-   class_<MyG4TriangularFacet, bases<G4VFacet>> ("MyG4TriangularFacet")
+   class_<MyG4TriangularFacet, bases<G4TriangularFacet>> ("MyG4TriangularFacet")
      // Constructors 
      .def(init<Base::Vector3d, Base::Vector3d, Base::Vector3d>())
      .def(init<G4ThreeVector,G4ThreeVector,G4ThreeVector>())
