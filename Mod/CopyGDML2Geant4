@@ -1,0 +1,5 @@
+cp ../../FreeCAD_Python_GDML/Mod/exportGDML.py .
+cp ../../FreeCAD_Python_GDML/Mod/GDMLCommands.py .
+cp ../../FreeCAD_Python_GDML/Mod/GDMLObjects.py .
+cp -r ../../FreeCAD_Python_GDML/Mod/Resources .
+

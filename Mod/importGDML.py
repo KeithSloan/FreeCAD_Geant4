@@ -98,19 +98,54 @@ class switch(object):
 def case(*args):
     return any((arg == switch.value for arg in args))
 
-def processPlacement(pv) :
+def rad2degrees(r) :
+    return(r*180/math.pi)
+
+def createFCmatrix(rot, tran) :
+    #mat = FreeCAD.Base.Matrix()
+    #mat.A11 = 
+    print ("Rotation X axis")
+    phiX = rad2degrees(rot.phiX())
+    print phiX
+    print ("Rotation Y axis")
+    phiY = rad2degrees(rot.phiY())
+    print phiY
+    print ("Rotation Z axis")
+    phiZ = rad2degrees(rot.phiZ())
+    print phiZ
+    #t = rot[1][1]
+    r = App.Rotation(phiZ,phiY,phiX)
+    print t
+    #return mat
+
+def processPlacement(obj, pv) :
+    # pv G4VPhysicalVolume
     print("Process Placement")
     print("Volume Rotation")
     print pv.GetRotation()
-    print("Object Rotation")
-    print pv.GetObjectRotationValue()
     print("Volume Translation")
-    tran = pv.GetTranslation()
-    #print dir(tran)
-    print tran
+    print pv.GetTranslation()
+    print ("Object")
+    rot =  pv.GetObjectRotationValue()
+    print rot  
+    print ("Rotation X axis")
+    phiX = rad2degrees(rot.phiX())
+    print phiX
+    print ("Rotation Y axis")
+    phiY = rad2degrees(rot.phiY())
+    print phiY
+    print ("Rotation Z axis")
+    phiZ = rad2degrees(rot.phiZ())
+    print phiZ
     print("Object Translation")
-    print pv.GetObjectTranslation()
-   
+    tran =  pv.GetObjectTranslation()
+    print tran
+    #createFCmatrix(rot,tran)
+    pos = FreeCAD.Vector(tran.x,tran.y,tran.z)
+    rot = FreeCAD.Rotation(phiZ,phiY,phiX)
+    centre = FreeCAD.Vector(0,0,0)
+    newplace = FreeCAD.Placement(pos,rot,centre)
+    obj.Placement = newplace
 
 def createBox(pv,lx,ly,lz) :
     print "CreateBox : "
@@ -157,6 +192,17 @@ def createTube(solid,volref,lx,ly,lz,rot) :
     mytube.Placement = processPlacement(base,rot)
     print mytube.Placement.Rotation
 
+def createGDMLBox(volref,solid,material) :
+    from GDMLObjects import GDMLBox, ViewProvider
+    print "CreateBox : "
+    mybox=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","GDMLBox")
+    x = solid.GetXHalfLength()*2
+    y = solid.GetYHalfLength()*2
+    z = solid.GetZHalfLength()*2
+    GDMLBox(mybox,x,y,z,"mm",material)
+    ViewProvider(mybox.ViewObject)
+    return mybox
+
 def createGDMLCone(volref,solid,material) :
     from GDMLObjects import GDMLCone, ViewProvider
     print "CreateCone : "
@@ -175,28 +221,32 @@ def createGDMLCone(volref,solid,material) :
     print("GDMLCone ViewProvided - added")
     return(mycone)
 
-def createGDMLBox(volref,solid,material) :
-    from GDMLObjects import GDMLBox, ViewProvider
-    print "CreateBox : "
-    mybox=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","GDMLBox")
-    x = solid.GetXHalfLength()*2
-    y = solid.GetYHalfLength()*2
+def createGDMLTube(volref,solid,material) :
+    from GDMLObjects import GDMLTube, ViewProvider
+    print "CreateCone : "
+    mytube=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","GDMLTube")
+    rmin1 = solid.GetInnerRadiusMinusZ()
+    rmax1 = solid.GetInnerRadiusPlusZ()
+    rmin2 = solid.GetOuterRadiusMinusZ()
+    rmax2 = solid.GetOuterRadiusPlusZ()
     z = solid.GetZHalfLength()*2
-    GDMLBox(mybox,x,y,z,"mm",material)
-    ViewProvider(mybox.ViewObject)
-    #print "Logical Position : "+str(lx)+','+str(ly)+','+str(lz)
-    #base = FreeCAD.Vector(lx-x/2,ly-y/2,lz-z/2)
-    #mycube.Placement = processPlacement(base,rot)
-    #print mycube.Placement.Rotation
-    #mycube.ViewObject.DisplayMode = 'Wireframe'
-    return mybox
-
+    startphi = solid.GetStartPhiAngle()
+    deltaphi = solid.GetDeltaPhiAngle()
+    GDMLCone(mycone,rmin1,rmax1,rmin2,rmax2,z,startphi,deltaphi, \
+            "rad","mm",material)
+    print("GDMLCone initiated")
+    ViewProvider(mycone.ViewObject)
+    print("GDMLCone ViewProvided - added")
+    return(mycone)
 
 def parseLogicalVolume(lv,pv) :
+    # lv - G4LogicalVolume
     print("Parse Logical Volume "+str(lv.GetName()))
-#   print dir(lv)
+    #   print dir(lv)
     solid = lv.GetSolid()
+    # solid G4VSolid
     G4mat = lv.GetMaterial()
+    # G4mat G4Material
     material = str(G4mat.GetName())
     while switch(type(solid)) :
        if case(Geant4.G4geometry.G4Box):
@@ -207,8 +257,8 @@ def parseLogicalVolume(lv,pv) :
               obj = createGDMLCone(pv,solid,material)
               break
 
-       if case(Geant4.G4geometry.G4Tubs):
-              createTubs()
+       if case(Geant4.G4geometry.G4Tube):
+              obj = createGDMLTube(pv,solid,material)
               break
 
        if case(Geant4.G4geometry.G4Trap):
@@ -235,7 +285,9 @@ def parseLogicalVolume(lv,pv) :
        print "Solid type : "+str(type(solid))+" Not yet supported\n"
        break
 
-#    print "Deal with Translation and Rotation"
+    print "Deal with Translation and Rotation"
+    processPlacement(obj, pv)
+
 #    t3v = pv.GetObjectTranslation()
 #    print "X : "+str(t3v.getX())
 #    print "Y : "+str(t3v.getY())
@@ -257,8 +309,10 @@ def parseLogicalVolume(lv,pv) :
 #    pm = FreeCAD.Matrix()
 
 def browsePhysicalVolume(pv):
+    # pv G4VPhysicalVolume
     print("\nPhysical Volume  : "+str(pv.GetName()))
     lv = pv.GetLogicalVolume()
+    # lv - G4LogicalVolume
     num = lv.GetNoDaughters()
     if num == 0 :
        parseLogicalVolume(lv,pv)

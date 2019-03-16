@@ -38,3 +38,22 @@ ln -s ~/FreeCAD_Geant4/MyG4py/lib ~/.local/lib/python2.7/site-packages/MyG4py
 
 ## ToDo
 Add sym links to python libraries to softLink script - make location neutral
+
+## Acknowledgements
+
+Thanks to
+
+* Wouter Deconnick
+
+and the following FreeCAD forum members
+
+* wmayer
+* Joel_graff
+* chrisb
+
+## Feedback
+
+To contact the Author email keith[at]sloan-home.co.uk
+
+~                 
+

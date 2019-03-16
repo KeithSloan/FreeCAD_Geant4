@@ -1,6 +1,0 @@
-ln -s ../../FreeCAD_Python_GDML/Mod/exportGDML.py .
-ln -s ../../FreeCAD_Python_GDML/Mod/GDMLCommands.py .
-ln -s ../../FreeCAD_Python_GDML/Mod/GDMLObjects.py .
-ln -s ../../FreeCAD_Python_GDML/Mod/GuiInit.py .
-ln -s ../../FreeCAD_Python_GDML/Mod/Resources .
-
