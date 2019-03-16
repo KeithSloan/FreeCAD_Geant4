@@ -1,8 +1,4 @@
-export gdml is currently empty file - Investigate
- 
-ToFix
-=====`
-G4MyG4TriangularFacet constructor with FreeCAD vectors
+Try without my python lib 
 
 Tidy Ups
 ========
