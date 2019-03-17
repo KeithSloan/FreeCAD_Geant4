@@ -221,23 +221,38 @@ def createGDMLCone(volref,solid,material) :
     print("GDMLCone ViewProvided - added")
     return(mycone)
 
+def createGDMLSphere(volref,solid,material) :
+    from GDMLObjects import GDMLSphere, ViewProvider
+    print "CreateSphere : "
+    mysphere=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","GDMLSphere")
+    rmin = solid.GetInsideRadius()
+    rmax = solid.GetOuterRadius()
+    startphi = solid.GetStartPhiAngle()
+    deltaphi = solid.GetDeltaPhiAngle()
+    starttheta = solid.GetStartThetaAngle()
+    deltatheta = solid.GetDeltaThetaAngle()
+    GDMLSphere(mysphere,rmin,rmax,startphi,deltaphi, \
+               starttheta, deltatheta,"rad","mm",material)
+    print("GDMLSphere initiated")
+    ViewProvider(mysphere.ViewObject)
+    print("GDMLSphere ViewProvided - added")
+    return(mysphere)
+
 def createGDMLTube(volref,solid,material) :
     from GDMLObjects import GDMLTube, ViewProvider
-    print "CreateCone : "
+    print "CreateTube : "
     mytube=FreeCAD.ActiveDocument.addObject("Part::FeaturePython","GDMLTube")
-    rmin1 = solid.GetInnerRadiusMinusZ()
-    rmax1 = solid.GetInnerRadiusPlusZ()
-    rmin2 = solid.GetOuterRadiusMinusZ()
-    rmax2 = solid.GetOuterRadiusPlusZ()
+    rmin = solid.GetInnerRadius()
+    rmax = solid.GetOuterRadius()
     z = solid.GetZHalfLength()*2
     startphi = solid.GetStartPhiAngle()
     deltaphi = solid.GetDeltaPhiAngle()
-    GDMLCone(mycone,rmin1,rmax1,rmin2,rmax2,z,startphi,deltaphi, \
+    GDMLTube(mytube,rmin,rmax,z,startphi,deltaphi, \
             "rad","mm",material)
-    print("GDMLCone initiated")
-    ViewProvider(mycone.ViewObject)
-    print("GDMLCone ViewProvided - added")
-    return(mycone)
+    print("GDMLTube initiated")
+    ViewProvider(mytube.ViewObject)
+    print("GDMLTube ViewProvided - added")
+    return(mytube)
 
 def parseLogicalVolume(lv,pv) :
     # lv - G4LogicalVolume
@@ -257,7 +272,11 @@ def parseLogicalVolume(lv,pv) :
               obj = createGDMLCone(pv,solid,material)
               break
 
-       if case(Geant4.G4geometry.G4Tube):
+       if case(Geant4.G4geometry.G4Sphere):
+              obj = createGDMLSphere(pv,solid,material)
+              break
+
+       if case(Geant4.G4geometry.G4Tubs):
               obj = createGDMLTube(pv,solid,material)
               break
 
@@ -335,6 +354,8 @@ def processGDML(filename):
 #    wv = gdml_parser.GetWorldVolume(G4String(str("Default")))
     wv = gdml_parser.GetWorldVolume()
     num = browsePhysicalVolume(wv)
+    FreeCAD.ActiveDocument.recompute()
+    FreeCADGui.SendMsgToActiveView("ViewFit")
     FreeCAD.Console.PrintMessage("Final Number : " + str(num)+'\n')
 
     doc.recompute()
